@@ -99,6 +99,18 @@ static inline void tick_broadcast_exit(void)
 	tick_broadcast_oneshot_control(TICK_BROADCAST_EXIT);
 }
 
+enum tick_dep_bits {
+	TICK_DEP_BIT_POSIX_TIMER	= 0,
+	TICK_DEP_BIT_PERF_EVENTS	= 1,
+	TICK_DEP_BIT_SCHED		= 2,
+	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3
+};
+
+#define TICK_DEP_MASK_POSIX_TIMER	(1 << TICK_DEP_BIT_POSIX_TIMER)
+#define TICK_DEP_MASK_PERF_EVENTS	(1 << TICK_DEP_BIT_PERF_EVENTS)
+#define TICK_DEP_MASK_SCHED		(1 << TICK_DEP_BIT_SCHED)
+#define TICK_DEP_MASK_CLOCK_UNSTABLE	(1 << TICK_DEP_BIT_CLOCK_UNSTABLE)
+
 #ifdef CONFIG_NO_HZ_COMMON
 extern int tick_nohz_enabled;
 extern int tick_nohz_tick_stopped(void);
@@ -224,6 +236,20 @@ extern void __tick_nohz_task_switch(void);
 static inline bool tick_nohz_full_enabled(void) { return false; }
 static inline bool tick_nohz_full_cpu(int cpu) { return false; }
 static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask) { }
+
+static inline void tick_dep_set(enum tick_dep_bits bit) { }
+static inline void tick_dep_clear(enum tick_dep_bits bit) { }
+static inline void tick_dep_set_cpu(int cpu, enum tick_dep_bits bit) { }
+static inline void tick_dep_clear_cpu(int cpu, enum tick_dep_bits bit) { }
+static inline void tick_dep_set_task(struct task_struct *tsk,
+				     enum tick_dep_bits bit) { }
+static inline void tick_dep_clear_task(struct task_struct *tsk,
+				       enum tick_dep_bits bit) { }
+static inline void tick_dep_set_signal(struct signal_struct *signal,
+				       enum tick_dep_bits bit) { }
+static inline void tick_dep_clear_signal(struct signal_struct *signal,
+					 enum tick_dep_bits bit) { }
+
 static inline void tick_nohz_full_kick_cpu(int cpu) { }
 static inline void tick_nohz_full_kick(void) { }
 static inline void tick_nohz_full_kick_all(void) { }
