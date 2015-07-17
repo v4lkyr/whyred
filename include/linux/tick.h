@@ -231,7 +231,6 @@ static inline void tick_dep_clear_signal(struct signal_struct *signal,
 }
 
 extern void tick_nohz_full_kick_cpu(int cpu);
-extern void tick_nohz_full_kick_all(void);
 extern void __tick_nohz_task_switch(void);
 #else
 static inline bool tick_nohz_full_enabled(void) { return false; }
@@ -252,7 +251,6 @@ static inline void tick_dep_clear_signal(struct signal_struct *signal,
 					 enum tick_dep_bits bit) { }
 
 static inline void tick_nohz_full_kick_cpu(int cpu) { }
-static inline void tick_nohz_full_kick_all(void) { }
 static inline void __tick_nohz_task_switch(void) { }
 #endif
 
