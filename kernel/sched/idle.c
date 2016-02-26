@@ -235,8 +235,6 @@ static void cpu_idle_loop(void)
 			rmb();
 
 			if (cpu_is_offline(cpu)) {
-				rcu_cpu_notify(NULL, CPU_DYING_IDLE,
-					       (void *)(long)cpu);
 				smp_mb(); /* all activity before dead. */
 				this_cpu_write(cpu_dead_idle, true);
 				arch_cpu_idle_dead();
