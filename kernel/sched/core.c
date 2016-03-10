@@ -5822,10 +5822,10 @@ static struct notifier_block migration_notifier = {
 	.priority = CPU_PRI_MIGRATION,
 };
 
-static void set_cpu_rq_start_time(void)
+static void set_cpu_rq_start_time(unsigned int cpu)
 {
-	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
+
 	rq->age_stamp = sched_clock_cpu(cpu);
 }
 
@@ -5839,10 +5839,6 @@ static int sched_cpu_active(struct notifier_block *nfb,
 	int cpu = (long)hcpu;
 
 	switch (action & ~CPU_TASKS_FROZEN) {
-	case CPU_STARTING:
-		set_cpu_rq_start_time();
-		return NOTIFY_OK;
-
 	case CPU_DOWN_FAILED:
 #ifdef CONFIG_SCHED_SMT
 		/* Same as for CPU_ONLINE */
@@ -5875,6 +5871,12 @@ static int sched_cpu_inactive(struct notifier_block *nfb,
 	default:
 		return NOTIFY_DONE;
 	}
+}
+
+int sched_cpu_starting(unsigned int cpu)
+{
+	set_cpu_rq_start_time(cpu);
+	return 0;
 }
 
 static int __init migration_init(void)
@@ -7965,7 +7967,7 @@ void __init sched_init(void)
 	if (cpu_isolated_map == NULL)
 		zalloc_cpumask_var(&cpu_isolated_map, GFP_NOWAIT);
 	idle_thread_set_boot_cpu();
-	set_cpu_rq_start_time();
+	set_cpu_rq_start_time(smp_processor_id());
 #endif
 	init_sched_fair_class();
 
