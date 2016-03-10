@@ -7672,8 +7672,6 @@ static int sched_cpu_inactive(struct notifier_block *nfb,
 		if (cpumask_weight(cpu_smt_mask((long)hcpu)) == 2)
 			atomic_dec(&sched_smt_present);
 #endif
-		return NOTIFY_OK;
-	case CPU_DEAD:
 		sched_domains_numa_masks_clear(cpu);
 		return NOTIFY_OK;
 	default:
