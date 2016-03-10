@@ -7663,6 +7663,7 @@ int sched_cpu_dying(unsigned int cpu)
 	raw_spin_unlock_irqrestore(&rq->lock, flags);
 	calc_load_migrate(rq);
 	update_max_interval();
+	nohz_balance_exit_idle(cpu);
 	return 0;
 }
 #endif
