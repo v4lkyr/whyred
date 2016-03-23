@@ -9817,10 +9817,7 @@ no_move:
 				*continue_balancing = 0;
 			}
 
-			/*
-			 * We've kicked active balancing, reset the failure
-			 * counter.
-			 */
+			/* We've kicked active balancing, force task migration. */
 			sd->nr_balance_failed =
 			    sd->cache_nice_tries +
 			    NEED_ACTIVE_BALANCE_THRESHOLD - 1;
@@ -10092,6 +10089,8 @@ static int active_load_balance_cpu_stop(void *data)
 		p = detach_one_task(&env);
 		if (p) {
 			schedstat_inc(sd, alb_pushed);
+			/* Active balancing done, reset the failure counter. */
+			sd->nr_balance_failed = 0;
 		} else {
 			schedstat_inc(sd, alb_failed);
 		}
