@@ -1199,7 +1199,7 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
 		 */
 		WARN_ON(cpumask_intersects(new_mask, cpu_online_mask) &&
 			!cpumask_intersects(new_mask, cpu_active_mask) &&
-			p->nr_cpus_allowed != 1);
+			tsk_nr_cpus_allowed(p) != 1);
 	}
 
 	/* Can the task run on the task's current CPU? If so, we're done */
@@ -1623,7 +1623,7 @@ int select_task_rq(struct task_struct *p, int cpu, int sd_flags, int wake_flags,
 {
 	lockdep_assert_held(&p->pi_lock);
 
-	if (p->nr_cpus_allowed > 1)
+	if (tsk_nr_cpus_allowed(p) > 1)
 		cpu = p->sched_class->select_task_rq(p, cpu, sd_flags, wake_flags,
 						     sibling_count_hint);
 	else
