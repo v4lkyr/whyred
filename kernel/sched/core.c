@@ -1675,13 +1675,15 @@ static inline int __set_cpus_allowed_ptr(struct task_struct *p,
 static void
 ttwu_stat(struct task_struct *p, int cpu, int wake_flags)
 {
-#ifdef CONFIG_SCHEDSTATS
-	struct rq *rq = this_rq();
+	struct rq *rq;
+
+	if (!schedstat_enabled())
+		return;
+
+	rq = this_rq();
 
 #ifdef CONFIG_SMP
-	int this_cpu = smp_processor_id();
-
-	if (cpu == this_cpu) {
+	if (cpu == rq->cpu) {
 		schedstat_inc(rq->ttwu_local);
 		schedstat_inc(p->se.statistics.nr_wakeups_local);
 	} else {
@@ -1689,7 +1691,7 @@ ttwu_stat(struct task_struct *p, int cpu, int wake_flags)
 
 		schedstat_inc(p->se.statistics.nr_wakeups_remote);
 		rcu_read_lock();
-		for_each_domain(this_cpu, sd) {
+		for_each_domain(rq->cpu, sd) {
 			if (cpumask_test_cpu(cpu, sched_domain_span(sd))) {
 				schedstat_inc(sd->ttwu_wake_remote);
 				break;
@@ -1700,7 +1702,6 @@ ttwu_stat(struct task_struct *p, int cpu, int wake_flags)
 
 	if (wake_flags & WF_MIGRATED)
 		schedstat_inc(p->se.statistics.nr_wakeups_migrate);
-
 #endif /* CONFIG_SMP */
 
 	schedstat_inc(rq->ttwu_count);
@@ -1708,8 +1709,6 @@ ttwu_stat(struct task_struct *p, int cpu, int wake_flags)
 
 	if (wake_flags & WF_SYNC)
 		schedstat_inc(p->se.statistics.nr_wakeups_sync);
-
-#endif /* CONFIG_SCHEDSTATS */
 }
 
 static inline void ttwu_activate(struct rq *rq, struct task_struct *p, int en_flags)
@@ -2140,8 +2139,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags,
 
 	ttwu_queue(p, cpu, wake_flags);
 stat:
-	if (schedstat_enabled())
-		ttwu_stat(p, cpu, wake_flags);
+	ttwu_stat(p, cpu, wake_flags);
 out:
 	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
 
@@ -2195,8 +2193,7 @@ static void try_to_wake_up_local(struct task_struct *p, struct pin_cookie cookie
 	}
 
 	ttwu_do_wakeup(rq, p, 0, cookie);
-	if (schedstat_enabled())
-		ttwu_stat(p, smp_processor_id(), 0);
+	ttwu_stat(p, smp_processor_id(), 0);
 out:
 	raw_spin_unlock(&p->pi_lock);
 }
@@ -8049,12 +8046,10 @@ void normalize_rt_tasks(void)
 		if (p->flags & PF_KTHREAD)
 			continue;
 
-		p->se.exec_start		= 0;
-#ifdef CONFIG_SCHEDSTATS
-		p->se.statistics.wait_start	= 0;
-		p->se.statistics.sleep_start	= 0;
-		p->se.statistics.block_start	= 0;
-#endif
+		p->se.exec_start = 0;
+		schedstat_set(p->se.statistics.wait_start,  0);
+		schedstat_set(p->se.statistics.sleep_start, 0);
+		schedstat_set(p->se.statistics.block_start, 0);
 
 		if (!dl_task(p) && !rt_task(p)) {
 			/*
