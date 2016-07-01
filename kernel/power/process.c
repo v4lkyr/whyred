@@ -112,6 +112,8 @@ static int try_to_freeze_tasks(bool user_only)
 			}
 			read_unlock(&tasklist_lock);
 	} else {
+		if (wq_busy)
+			show_workqueue_state();
 		pr_cont("(elapsed %d.%03d seconds) ", elapsed_msecs / 1000,
 			elapsed_msecs % 1000);
 	}
