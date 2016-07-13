@@ -1248,6 +1248,11 @@ static struct cpuhp_step cpuhp_bp_states[] = {
 		.teardown		= NULL,
 		.cant_stop		= true,
 	},
+	[CPUHP_WORKQUEUE_PREP] = {
+		.name = "workqueue prepare",
+		.startup = workqueue_prepare_cpu,
+		.teardown = NULL,
+	},
 	/*
 	 * Preparatory and dead notifiers. Will be replaced once the notifiers
 	 * are converted to states.
@@ -1334,6 +1339,12 @@ static struct cpuhp_step cpuhp_ap_states[] = {
 		.startup		= smpboot_unpark_threads,
 		.teardown		= smpboot_park_threads,
 	},
+	[CPUHP_AP_WORKQUEUE_ONLINE] = {
+		.name = "workqueue online",
+		.startup = workqueue_online_cpu,
+		.teardown = workqueue_offline_cpu,
+	},
+
 	/*
 	 * Online/down_prepare notifiers. Will be removed once the notifiers
 	 * are converted to states.
