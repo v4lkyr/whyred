@@ -57,6 +57,7 @@ tmp3		.req	x9
 zeroones	.req	x10
 pos		.req	x11
 
+.p2align 6
 	/* Start of performance-critical section  -- one 64B cache line.  */
 ENTRY(strcmp)
 	prfm    pldl1strm, [src1]
