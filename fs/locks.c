@@ -1578,6 +1578,7 @@ int fcntl_getlease(struct file *filp)
 
 	ctx = smp_load_acquire(&inode->i_flctx);
 	if (ctx && !list_empty_careful(&ctx->flc_lease)) {
+		percpu_down_read_preempt_disable(&file_rwsem);
 		spin_lock(&ctx->flc_lock);
 		time_out_leases(file_inode(filp), &dispose);
 		list_for_each_entry(fl, &ctx->flc_lease, fl_list) {
@@ -1587,6 +1588,8 @@ int fcntl_getlease(struct file *filp)
 			break;
 		}
 		spin_unlock(&ctx->flc_lock);
+		percpu_up_read_preempt_enable(&file_rwsem);
+
 		locks_dispose_list(&dispose);
 	}
 	return type;
@@ -2493,11 +2496,14 @@ locks_remove_lease(struct file *filp, struct file_lock_context *ctx)
 	if (list_empty(&ctx->flc_lease))
 		return;
 
+	percpu_down_read_preempt_disable(&file_rwsem);
 	spin_lock(&ctx->flc_lock);
 	list_for_each_entry_safe(fl, tmp, &ctx->flc_lease, fl_list)
 		if (filp == fl->fl_file)
 			lease_modify(fl, F_UNLCK, &dispose);
 	spin_unlock(&ctx->flc_lock);
+	percpu_up_read_preempt_enable(&file_rwsem);
+
 	locks_dispose_list(&dispose);
 }
 
