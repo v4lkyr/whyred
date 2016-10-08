@@ -654,28 +654,16 @@ static void arch_dump_stack(void *info)
 	cpumask_clear_cpu(smp_processor_id(), &backtrace_csd_busy);
 }
 
-void arch_trigger_all_cpu_backtrace(bool include_self)
+void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
 {
-	struct call_single_data *csd;
-	int cpu;
+	long this_cpu = get_cpu();
 
-	for_each_cpu(cpu, cpu_online_mask) {
-		/*
-		 * If we previously sent an IPI to the target CPU & it hasn't
-		 * cleared its bit in the busy cpumask then it didn't handle
-		 * our previous IPI & it's not safe for us to reuse the
-		 * call_single_data_t.
-		 */
-		if (cpumask_test_and_set_cpu(cpu, &backtrace_csd_busy)) {
-			pr_warn("Unable to send backtrace IPI to CPU%u - perhaps it hung?\n",
-				cpu);
-			continue;
-		}
+	if (cpumask_test_cpu(this_cpu, mask) && !exclude_self)
+		dump_stack();
 
-		csd = &per_cpu(backtrace_csd, cpu);
-		csd->func = arch_dump_stack;
-		smp_call_function_single_async(cpu, csd);
-	}
+	smp_call_function_many(mask, arch_dump_stack, NULL, 1);
+
+	put_cpu();
 }
 
 int mips_get_process_fp_mode(struct task_struct *task)

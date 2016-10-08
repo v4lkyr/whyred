@@ -38,30 +38,44 @@ static inline void hardlockup_detector_disable(void) {}
  * base function. Return whether such support was available,
  * to allow calling code to fall back to some other mechanism:
  */
-#ifdef arch_trigger_all_cpu_backtrace
+#ifdef arch_trigger_cpumask_backtrace
 static inline bool trigger_all_cpu_backtrace(void)
 {
 	#if defined(CONFIG_ARM64)
 	arch_trigger_all_cpu_backtrace();
 	#else
-	arch_trigger_all_cpu_backtrace(true);
+	arch_trigger_cpumask_backtrace(cpu_online_mask, false);
 	#endif
 
 	return true;
 }
+
 static inline bool trigger_allbutself_cpu_backtrace(void)
 {
 	#if defined(CONFIG_ARM64)
 	arch_trigger_all_cpu_backtrace();
 	#else
-	arch_trigger_all_cpu_backtrace(false);
+	arch_trigger_cpumask_backtrace(cpu_online_mask, true);
 	#endif
 
 	return true;
 }
 
+static inline bool trigger_cpumask_backtrace(struct cpumask *mask)
+{
+	arch_trigger_cpumask_backtrace(mask, false);
+	return true;
+}
+
+static inline bool trigger_single_cpu_backtrace(int cpu)
+{
+	arch_trigger_cpumask_backtrace(cpumask_of(cpu), false);
+	return true;
+}
+
 /* generic implementation */
-void nmi_trigger_all_cpu_backtrace(bool include_self,
+void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+				   bool exclude_self,
 				   void (*raise)(cpumask_t *mask));
 bool nmi_cpu_backtrace(struct pt_regs *regs);
 
@@ -71,6 +85,14 @@ static inline bool trigger_all_cpu_backtrace(void)
 	return false;
 }
 static inline bool trigger_allbutself_cpu_backtrace(void)
+{
+	return false;
+}
+static inline bool trigger_cpumask_backtrace(struct cpumask *mask)
+{
+	return false;
+}
+static inline bool trigger_single_cpu_backtrace(int cpu)
 {
 	return false;
 }
