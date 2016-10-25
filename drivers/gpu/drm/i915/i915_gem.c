@@ -1211,7 +1211,7 @@ static int __i915_spin_request(struct drm_i915_gem_request *req, int state)
 		if (busywait_stop(timeout, cpu))
 			break;
 
-		cpu_relax_lowlatency();
+		cpu_relax();
 	}
 
 	if (i915_gem_request_completed(req, false))
