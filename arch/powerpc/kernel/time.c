@@ -370,15 +370,45 @@ void vtime_account_idle(struct task_struct *tsk)
  */
 void vtime_flush(struct task_struct *tsk)
 {
-	cputime_t utime, utimescaled;
+	struct cpu_accounting_data *acct = get_accounting(tsk);
 
-	utime = get_paca()->user_time;
-	utimescaled = get_paca()->user_time_scaled;
-	get_paca()->user_time = 0;
-	get_paca()->user_time_scaled = 0;
-	get_paca()->utime_sspurr = 0;
-	account_user_time(tsk, utime);
-	tsk->utimescaled += utimescaled;
+	if (acct->utime)
+		account_user_time(tsk, acct->utime);
+
+	if (acct->utime_scaled)
+		tsk->utimescaled += cputime_to_nsecs(acct->utime_scaled);
+
+	if (acct->gtime)
+		account_guest_time(tsk, acct->gtime);
+
+	if (acct->steal_time)
+		account_steal_time(acct->steal_time);
+
+	if (acct->idle_time)
+		account_idle_time(acct->idle_time);
+
+	if (acct->stime)
+		account_system_index_time(tsk, acct->stime, CPUTIME_SYSTEM);
+
+	if (acct->stime_scaled)
+		tsk->stimescaled += cputime_to_nsecs(acct->stime_scaled);
+
+	if (acct->hardirq_time)
+		account_system_index_time(tsk, acct->hardirq_time, CPUTIME_IRQ);
+
+	if (acct->softirq_time)
+		account_system_index_time(tsk, acct->softirq_time, CPUTIME_SOFTIRQ);
+
+	acct->utime = 0;
+	acct->utime_scaled = 0;
+	acct->utime_sspurr = 0;
+	acct->gtime = 0;
+	acct->steal_time = 0;
+	acct->idle_time = 0;
+	acct->stime = 0;
+	acct->stime_scaled = 0;
+	acct->hardirq_time = 0;
+	acct->softirq_time = 0;
 }
 
 #else /* ! CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */

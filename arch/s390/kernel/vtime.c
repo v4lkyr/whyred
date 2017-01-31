@@ -88,6 +88,34 @@ static void update_mt_scaling(void)
 	__this_cpu_write(mt_scaling_jiffies, jiffies_64);
 }
 
+static inline u64 update_tsk_timer(unsigned long *tsk_vtime, u64 new)
+{
+	u64 delta;
+
+	delta = new - *tsk_vtime;
+	*tsk_vtime = new;
+	return delta;
+}
+
+
+static inline u64 scale_vtime(u64 vtime)
+{
+	u64 mult = __this_cpu_read(mt_scaling_mult);
+	u64 div = __this_cpu_read(mt_scaling_div);
+
+	if (smp_cpu_mtid)
+		return vtime * mult / div;
+	return vtime;
+}
+
+static void account_system_index_scaled(struct task_struct *p,
+					cputime_t cputime, cputime_t scaled,
+					enum cpu_usage_stat index)
+{
+	p->stimescaled += cputime_to_nsecs(scaled);
+	account_system_index_time(p, cputime, index);
+}
+
 /*
  * Update process times based on virtual cpu times stored by entry.S
  * to the lowcore fields user_timer, system_timer & steal_clock.
@@ -117,20 +145,30 @@ static int do_account_vtime(struct task_struct *tsk, int hardirq_offset)
 	    time_after64(jiffies_64, this_cpu_read(mt_scaling_jiffies)))
 		update_mt_scaling();
 
-	user = S390_lowcore.user_timer - ti->user_timer;
-	S390_lowcore.steal_timer -= user;
-	ti->user_timer = S390_lowcore.user_timer;
+	/* Calculate cputime delta */
+	user = update_tsk_timer(&tsk->thread.user_timer,
+				READ_ONCE(S390_lowcore.user_timer));
+	guest = update_tsk_timer(&tsk->thread.guest_timer,
+				 READ_ONCE(S390_lowcore.guest_timer));
+	system = update_tsk_timer(&tsk->thread.system_timer,
+				  READ_ONCE(S390_lowcore.system_timer));
+	hardirq = update_tsk_timer(&tsk->thread.hardirq_timer,
+				   READ_ONCE(S390_lowcore.hardirq_timer));
+	softirq = update_tsk_timer(&tsk->thread.softirq_timer,
+				   READ_ONCE(S390_lowcore.softirq_timer));
+	S390_lowcore.steal_timer +=
+		clock - user - guest - system - hardirq - softirq;
 
-	system = S390_lowcore.system_timer - ti->system_timer;
-	S390_lowcore.steal_timer -= system;
-	ti->system_timer = S390_lowcore.system_timer;
+	/* Push account value */
+	if (user) {
+		account_user_time(tsk, user);
+		tsk->utimescaled += cputime_to_nsecs(scale_vtime(user));
+	}
 
-	user_scaled = user;
-	system_scaled = system;
-	/* Do MT utilization scaling */
-	if (smp_cpu_mtid) {
-		u64 mult = __this_cpu_read(mt_scaling_mult);
-		u64 div = __this_cpu_read(mt_scaling_div);
+	if (guest) {
+		account_guest_time(tsk, guest);
+		tsk->utimescaled += cputime_to_nsecs(scale_vtime(guest));
+	}
 
 		user_scaled = (user_scaled * mult) / div;
 		system_scaled = (system_scaled * mult) / div;
