@@ -161,7 +161,7 @@ static int do_account_vtime(struct task_struct *tsk, int hardirq_offset)
 
 	/* Push account value */
 	if (user) {
-		account_user_time(tsk, user);
+		account_user_time(tsk, cputime_to_nsecs(user));
 		tsk->utimescaled += cputime_to_nsecs(scale_vtime(user));
 	}
 
