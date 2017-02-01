@@ -4,8 +4,9 @@
 #include <linux/sched/topology.h>
 #include <linux/sched/rt.h>
 #include <linux/sched/smt.h>
-#include <linux/u64_stats_sync.h>
+#include <linux/sched/wake_q.h>
 #include <linux/sched/deadline.h>
+#include <linux/u64_stats_sync.h>
 #include <linux/kernel_stat.h>
 #include <linux/binfmts.h>
 #include <linux/mutex.h>
