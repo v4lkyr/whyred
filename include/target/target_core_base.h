@@ -6,6 +6,7 @@
 #include <linux/dma-mapping.h>
 #include <linux/blkdev.h>
 #include <linux/percpu_ida.h>
+#include <linux/percpu-refcount.h>
 #include <linux/t10-pi.h>
 #include <linux/completion.h>
 
