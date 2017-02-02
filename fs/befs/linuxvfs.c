@@ -18,6 +18,7 @@
 #include <linux/parser.h>
 #include <linux/namei.h>
 #include <linux/sched.h>
+#include <linux/cred.h>
 
 #include "befs.h"
 #include "btree.h"

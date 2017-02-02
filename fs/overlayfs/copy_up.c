@@ -15,6 +15,7 @@
 #include <linux/security.h>
 #include <linux/uaccess.h>
 #include <linux/sched.h>
+#include <linux/cred.h>
 #include <linux/namei.h>
 #include "overlayfs.h"
 
