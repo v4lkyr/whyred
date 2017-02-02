@@ -50,7 +50,7 @@
  *
  *****************************************************************************/
 
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/slab.h>
 #include <linux/init.h>
 #include <linux/delay.h>

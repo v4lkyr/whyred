@@ -26,6 +26,8 @@
 #include <linux/slab.h>
 #include <linux/timer.h>
 #include <linux/vmalloc.h>
+#include <linux/sched/signal.h>
+
 #include <asm/asm-offsets.h>
 #include <asm/lowcore.h>
 #include <asm/etr.h>

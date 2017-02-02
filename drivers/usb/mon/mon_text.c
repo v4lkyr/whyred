@@ -8,6 +8,7 @@
 #include <linux/list.h>
 #include <linux/usb.h>
 #include <linux/slab.h>
+#include <linux/sched/signal.h>
 #include <linux/time.h>
 #include <linux/export.h>
 #include <linux/mutex.h>

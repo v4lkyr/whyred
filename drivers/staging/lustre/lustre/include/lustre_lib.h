@@ -46,7 +46,7 @@
  * @{
  */
 
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/signal.h>
 #include <linux/types.h>
 #include "../../include/linux/libcfs/libcfs.h"

@@ -38,6 +38,7 @@
 #include <linux/of_irq.h>
 #include <linux/of_platform.h>
 #include <linux/slab.h>
+#include <linux/sched/signal.h>
 
 #include <asm/byteorder.h>
 #include <asm/io.h>

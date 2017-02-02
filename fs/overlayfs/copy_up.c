@@ -14,7 +14,7 @@
 #include <linux/xattr.h>
 #include <linux/security.h>
 #include <linux/uaccess.h>
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/cred.h>
 #include <linux/namei.h>
 #include "overlayfs.h"

@@ -9,7 +9,7 @@
 #include <linux/swap.h>
 #include <linux/swapops.h>
 
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/rwsem.h>
 #include <linux/hugetlb.h>
 

@@ -46,6 +46,18 @@
  * @{
  */
 
+#ifdef __KERNEL__
+# include <linux/quota.h>
+# include <linux/sched/signal.h>
+# include <linux/string.h> /* snprintf() */
+# include <linux/version.h>
+#else /* !__KERNEL__ */
+# define NEED_QUOTA_DEFS
+# include <stdio.h> /* snprintf() */
+# include <string.h>
+# include <sys/quota.h>
+# include <sys/stat.h>
+#endif /* __KERNEL__ */
 #include "ll_fiemap.h"
 #include "../linux/lustre_user.h"
 
