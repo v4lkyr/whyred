@@ -6,6 +6,7 @@
 #include <linux/slab.h>
 #include <crypto/hash.h>
 #include <linux/key-type.h>
+#include <linux/sched/mm.h>
 
 #include <keys/ceph-type.h>
 #include <keys/user-type.h>
