@@ -26,6 +26,7 @@
 #include <linux/mutex.h>
 #include <linux/pmem.h>
 #include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/uio.h>
 #include <linux/vmstat.h>
 
