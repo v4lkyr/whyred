@@ -22,6 +22,7 @@
 #include <linux/compiler.h>
 #include <linux/sched.h>
 #include <linux/sched/hotplug.h>
+#include <linux/mm_types.h>
 
 #include <asm/cacheflush.h>
 #include <asm/cpufeature.h>

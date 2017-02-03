@@ -6,7 +6,9 @@
  */
 
 #include <linux/vmalloc.h>
+#include <linux/mm_types.h>
 #include <linux/err.h>
+
 #include <asm/pgtable.h>
 #include "kvm-s390.h"
 #include "gaccess.h"

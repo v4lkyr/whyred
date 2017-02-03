@@ -7,6 +7,8 @@
 #ifndef __S390_MMU_CONTEXT_H
 #define __S390_MMU_CONTEXT_H
 
+#include <linux/mm_types.h>
+
 #include <asm/pgalloc.h>
 #include <asm/uaccess.h>
 #include <asm/tlbflush.h>
