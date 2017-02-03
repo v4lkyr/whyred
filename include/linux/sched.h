@@ -265,16 +265,6 @@ struct task_cputime_atomic {
 		.sum_exec_runtime = ATOMIC64_INIT(0),		\
 	}
 
-#define PREEMPT_DISABLED	(PREEMPT_DISABLE_OFFSET + PREEMPT_ENABLED)
-
-/*
- * Disable preemption until the scheduler is running -- use an unconditional
- * value so that it also works on !PREEMPT_COUNT kernels.
- *
- * Reset by start_kernel()->sched_init()->init_idle()->init_idle_preempt_count().
- */
-#define INIT_PREEMPT_COUNT	PREEMPT_OFFSET
-
 /**
  * struct util_est - Estimation utilization of FAIR tasks
  * @enqueued: instantaneous estimated utilization of a task/cpu
@@ -302,17 +292,6 @@ struct util_est {
 	unsigned int			ewma;
 #define UTIL_EST_WEIGHT_SHIFT		2
 };
-
-/*
- * Initial preempt_count value; reflects the preempt_count schedule invariant
- * which states that during context switches:
- *
- *    preempt_count() == 2*PREEMPT_DISABLE_OFFSET
- *
- * Note: PREEMPT_DISABLE_OFFSET is 0 for !PREEMPT_COUNT kernels.
- * Note: See finish_task_switch().
- */
-#define FORK_PREEMPT_COUNT	(2*PREEMPT_DISABLE_OFFSET + PREEMPT_ENABLED)
 
 /**
  * struct thread_group_cputimer - thread group interval timer counts
