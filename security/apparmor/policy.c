@@ -77,6 +77,7 @@
 #include <linux/spinlock.h>
 #include <linux/string.h>
 #include <linux/cred.h>
+#include <linux/rculist.h>
 
 #include "include/apparmor.h"
 #include "include/capability.h"
