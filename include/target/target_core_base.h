@@ -7,6 +7,8 @@
 #include <linux/blkdev.h>
 #include <linux/percpu_ida.h>
 #include <linux/t10-pi.h>
+#include <linux/completion.h>
+
 #include <net/sock.h>
 #include <net/tcp.h>
 
