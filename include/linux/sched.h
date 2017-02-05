@@ -1426,10 +1426,6 @@ extern void wake_up_new_task(struct task_struct *tsk);
  static inline void kick_process(struct task_struct *tsk) { }
 #endif
 
-extern void exit_files(struct task_struct *);
-
-extern void exit_itimers(struct signal_struct *);
-
 extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec);
 static inline void set_task_comm(struct task_struct *tsk, const char *from)
 {
