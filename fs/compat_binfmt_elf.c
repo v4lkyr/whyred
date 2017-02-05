@@ -19,6 +19,7 @@
 
 #include <linux/elfcore-compat.h>
 #include <linux/time.h>
+#include <linux/sched/cputime.h>
 
 /*
  * Rename the basic ELF layout types to refer to the 32-bit class of files.

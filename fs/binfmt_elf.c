@@ -38,6 +38,7 @@
 #include <linux/sched/coredump.h>
 #include <linux/sched/task_stack.h>
 #include <linux/sched/cputime.h>
+#include <linux/sched/signal.h>
 #include <linux/cred.h>
 #include <linux/dax.h>
 #include <asm/uaccess.h>

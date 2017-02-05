@@ -15,7 +15,7 @@
 
 #include <linux/cpufreq.h>
 #include <linux/cpufreq_times.h>
-#include <linux/cputime.h>
+#include <linux/sched/cputime.h>
 #include <linux/hashtable.h>
 #include <linux/init.h>
 #include <linux/proc_fs.h>

@@ -21,7 +21,7 @@
 #include <linux/notifier.h>
 #include <linux/slab.h>
 #include <linux/workqueue.h>
-#include <linux/sched.h>
+#include <linux/sched/cputime.h>
 #include <linux/spinlock.h>
 #include <linux/rq_stats.h>
 #include <linux/cpufreq.h>
