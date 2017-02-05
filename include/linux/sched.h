@@ -274,12 +274,6 @@ struct sched_capacity_reqs {
 	unsigned long total;
 };
 
-#ifdef ARCH_HAS_PREFETCH_SWITCH_STACK
-extern void prefetch_stack(struct task_struct *t);
-#else
-static inline void prefetch_stack(struct task_struct *t) { }
-#endif
-
 struct load_weight {
 	unsigned long weight;
 	u32 inv_weight;
