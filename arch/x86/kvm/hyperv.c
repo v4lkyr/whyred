@@ -26,6 +26,7 @@
 #include "hyperv.h"
 
 #include <linux/kvm_host.h>
+#include <linux/sched/cputime.h>
 #include <linux/nospec.h>
 #include <trace/events/kvm.h>
 
