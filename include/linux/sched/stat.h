@@ -24,4 +24,20 @@ extern void get_iowait_load(unsigned long *nr_waiters, unsigned long *load);
 extern u64 nr_running_integral(unsigned int cpu);
 #endif
 
+static inline int sched_info_on(void)
+{
+#ifdef CONFIG_SCHEDSTATS
+	return 1;
+#elif defined(CONFIG_TASK_DELAY_ACCT)
+	extern int delayacct_on;
+	return delayacct_on;
+#else
+	return 0;
+#endif
+}
+
+#ifdef CONFIG_SCHEDSTATS
+void force_schedstat_enabled(void);
+#endif
+
 #endif /* _LINUX_SCHED_STAT_H */
