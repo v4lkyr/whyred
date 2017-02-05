@@ -40,6 +40,7 @@
 #include <linux/io-mapping.h>
 #include <linux/sched.h>
 #include <linux/sched/mm.h>
+#include <linux/sched/task.h>
 #include <rdma/ib_user_verbs.h>
 #include <linux/mlx5/vport.h>
 #include <rdma/ib_smi.h>
