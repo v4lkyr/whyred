@@ -201,7 +201,7 @@ struct hrtimer;
 extern enum hrtimer_restart it_real_fn(struct hrtimer *);
 
 #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
-#include <linux/sysctl.h>
+struct ctl_table;
 
 extern struct tvec_base tvec_base_deferrable;
 
