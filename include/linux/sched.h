@@ -1298,13 +1298,6 @@ static inline bool cpupri_check_rt(void)
 }
 #endif
 
-/* sched_exec is called by processes performing an exec */
-#ifdef CONFIG_SMP
-extern void sched_exec(void);
-#else
-#define sched_exec()   {}
-#endif
-
 extern int yield_to(struct task_struct *p, bool preempt);
 extern void set_user_nice(struct task_struct *p, long nice);
 extern int task_prio(const struct task_struct *p);
