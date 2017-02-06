@@ -8,6 +8,8 @@
 #include <linux/miscdevice.h>
 #include <linux/msm_ion.h>
 #include <linux/uaccess.h>
+#include <linux/sched/task.h>
+
 #include "compat_ion.h"
 #include "ion_priv.h"
 
