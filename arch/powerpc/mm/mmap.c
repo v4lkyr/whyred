@@ -26,6 +26,7 @@
 #include <linux/mm.h>
 #include <linux/random.h>
 #include <linux/sched/signal.h>
+#include <linux/sched/mm.h>
 
 /*
  * Top of mmap area (just below the process stack).

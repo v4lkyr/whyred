@@ -27,6 +27,7 @@
 #include <linux/mman.h>
 #include <linux/module.h>
 #include <linux/sched/signal.h>
+#include <linux/sched/mm.h>
 #include <linux/random.h>
 #include <linux/compat.h>
 #include <linux/security.h>
