@@ -20,6 +20,7 @@
 #include <linux/export.h>
 #include <linux/ftrace.h>
 #include <linux/sched.h>
+#include <linux/sched/debug.h>
 #include <linux/stacktrace.h>
 
 #include <asm/irq.h>

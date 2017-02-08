@@ -17,6 +17,7 @@
 #include <linux/kprobes.h>
 #include <linux/nmi.h>
 #include <linux/cpu.h>
+#include <linux/sched/debug.h>
 #include <linux/seq_buf.h>
 
 #ifdef arch_trigger_cpumask_backtrace

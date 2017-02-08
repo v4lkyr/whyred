@@ -27,6 +27,7 @@
 #include <linux/module.h>
 #include <linux/nmi.h>
 #include <linux/sched.h>
+#include <linux/sched/debug.h>
 #include <linux/slab.h>
 
 #include <asm/apic.h>

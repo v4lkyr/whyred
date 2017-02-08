@@ -1,6 +1,8 @@
 #include <linux/module.h>
 #include <linux/spinlock.h>
 #include <linux/sort.h>
+#include <linux/sched/debug.h>
+
 #include <asm/uaccess.h>
 
 static inline unsigned long
