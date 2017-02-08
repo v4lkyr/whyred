@@ -11,6 +11,7 @@
 #include <linux/sched/numa_balancing.h>
 #include <linux/sched/mm.h>
 #include <linux/sched/cpufreq.h>
+#include <linux/sched/stat.h>
 #include <linux/u64_stats_sync.h>
 #include <linux/kernel_stat.h>
 #include <linux/binfmts.h>
