@@ -246,8 +246,6 @@ struct util_est {
 #define UTIL_EST_WEIGHT_SHIFT		2
 };
 
-#include <linux/rwsem.h>
-
 #ifdef CONFIG_SCHED_INFO
 struct sched_info {
 	/* cumulative counters */
