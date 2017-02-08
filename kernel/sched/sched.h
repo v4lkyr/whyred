@@ -9,6 +9,7 @@
 #include <linux/sched/deadline.h>
 #include <linux/sched/signal.h>
 #include <linux/sched/mm.h>
+#include <linux/sched/cpufreq.h>
 #include <linux/u64_stats_sync.h>
 #include <linux/kernel_stat.h>
 #include <linux/binfmts.h>
