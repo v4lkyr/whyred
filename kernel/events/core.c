@@ -45,6 +45,7 @@
 #include <linux/bpf.h>
 #include <linux/filter.h>
 #include <linux/sched/clock.h>
+#include <linux/sched/mm.h>
 
 #include "internal.h"
 
