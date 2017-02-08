@@ -5,6 +5,7 @@
 #define _TRACE_SCHED_H
 
 #include <linux/sched/idle.h>
+#include <linux/sched/numa_balancing.h>
 #include <linux/tracepoint.h>
 #include <linux/binfmts.h>
 
