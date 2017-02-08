@@ -21,6 +21,7 @@
 #include <linux/cpu.h>
 #include <linux/interrupt.h>
 #include <linux/sched.h>
+#include <linux/sched/hotplug.h>
 #include <linux/atomic.h>
 #include <asm/processor.h>
 #include <asm/mmu_context.h>
