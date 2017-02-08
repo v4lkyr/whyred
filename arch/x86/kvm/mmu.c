@@ -35,6 +35,7 @@
 #include <linux/compiler.h>
 #include <linux/srcu.h>
 #include <linux/slab.h>
+#include <linux/sched/signal.h>
 #include <linux/uaccess.h>
 
 #include <asm/page.h>

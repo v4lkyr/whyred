@@ -25,7 +25,7 @@
 #include <linux/personality.h>
 #include <linux/mm.h>
 #include <linux/random.h>
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 
 /*
  * Top of mmap area (just below the process stack).

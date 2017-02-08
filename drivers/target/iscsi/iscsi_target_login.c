@@ -19,6 +19,7 @@
 #include <linux/string.h>
 #include <linux/kthread.h>
 #include <linux/crypto.h>
+#include <linux/sched/signal.h>
 #include <linux/idr.h>
 #include <scsi/iscsi_proto.h>
 #include <target/target_core_base.h>
