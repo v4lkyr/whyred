@@ -26,6 +26,9 @@
 
 #include <asm/switch_to.h>
 #include <asm/tlb.h>
+#ifdef CONFIG_PARAVIRT
+#include <asm/paravirt.h>
+#endif
 
 #ifdef CONFIG_MSM_APP_SETTINGS
 #include <asm/app_api.h>
