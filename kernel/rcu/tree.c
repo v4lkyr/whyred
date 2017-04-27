@@ -250,8 +250,7 @@ static int rcu_gp_in_progress(struct rcu_state *rsp)
  */
 void rcu_sched_qs(void)
 {
-	unsigned long flags;
-
+	RCU_LOCKDEP_WARN(preemptible(), "rcu_sched_qs() invoked with preemption enabled!!!");
 	if (!__this_cpu_read(rcu_sched_data.cpu_no_qs.s))
 		return;
 	trace_rcu_grace_period(TPS("rcu_sched"),
@@ -260,17 +259,14 @@ void rcu_sched_qs(void)
 	__this_cpu_write(rcu_sched_data.cpu_no_qs.b.norm, false);
 	if (!__this_cpu_read(rcu_sched_data.cpu_no_qs.b.exp))
 		return;
-	local_irq_save(flags);
-	if (__this_cpu_read(rcu_sched_data.cpu_no_qs.b.exp)) {
-		__this_cpu_write(rcu_sched_data.cpu_no_qs.b.exp, false);
-		rcu_report_exp_rdp(&rcu_sched_state,
-				   this_cpu_ptr(&rcu_sched_data), true);
-	}
-	local_irq_restore(flags);
+	__this_cpu_write(rcu_sched_data.cpu_no_qs.b.exp, false);
+	rcu_report_exp_rdp(&rcu_sched_state,
+			   this_cpu_ptr(&rcu_sched_data), true);
 }
 
 void rcu_bh_qs(void)
 {
+	RCU_LOCKDEP_WARN(preemptible(), "rcu_bh_qs() invoked with preemption enabled!!!");
 	if (__this_cpu_read(rcu_bh_data.cpu_no_qs.s)) {
 		trace_rcu_grace_period(TPS("rcu_bh"),
 				       __this_cpu_read(rcu_bh_data.gpnum),
