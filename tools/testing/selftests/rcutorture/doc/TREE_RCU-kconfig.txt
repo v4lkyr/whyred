@@ -25,7 +25,9 @@ CONFIG_RCU_NOCB_CPU_NONE -- Do one.
 CONFIG_RCU_NOCB_CPU_ZERO -- Do one.
 CONFIG_RCU_TRACE -- Do half.
 CONFIG_SMP -- Need one !SMP for PREEMPT_RCU.
-!RCU_EXPERT -- Do a few, but these have to be vanilla configurations.
+CONFIG_RCU_EXPERT=n -- Do a few, but these have to be vanilla configurations.
+CONFIG_RCU_EQS_DEBUG -- Do at least one for CONFIG_NO_HZ_FULL and not.
+
 RCU-bh: Do one with PREEMPT and one with !PREEMPT.
 RCU-sched: Do one with PREEMPT but not BOOST.
 
@@ -72,10 +74,13 @@ CONFIG_RCU_TORTURE_TEST_RUNNABLE
 
 	Always used in KVM testing.
 
+<<<<<<< HEAD
 CONFIG_RCU_USER_QS
 
 	Redundant with CONFIG_NO_HZ_FULL.
 
+=======
+>>>>>>> 90040c9e3015... rcu: Remove *_SLOW_* Kconfig options
 CONFIG_PREEMPT_RCU
 CONFIG_TREE_RCU
 
