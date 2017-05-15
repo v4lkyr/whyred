@@ -68,14 +68,16 @@ CONFIG_RCU_TORTURE_TEST_RUNNABLE
 
 	Always used in KVM testing.
 
-<<<<<<< HEAD
-CONFIG_RCU_USER_QS
-
-	Redundant with CONFIG_NO_HZ_FULL.
-
-=======
->>>>>>> 90040c9e3015... rcu: Remove *_SLOW_* Kconfig options
 CONFIG_PREEMPT_RCU
 CONFIG_TREE_RCU
+CONFIG_TINY_RCU
 
-	These are controlled by CONFIG_PREEMPT.
+	These are controlled by CONFIG_PREEMPT and/or CONFIG_SMP.
+
+CONFIG_SRCU
+CONFIG_TASKS_RCU
+
+	Selected by CONFIG_RCU_TORTURE_TEST, so cannot disable.
+
+
+boot parameters ignored: TBD
