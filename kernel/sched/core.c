@@ -5547,6 +5547,7 @@ void sched_show_task(struct task_struct *p)
 	print_worker_info(KERN_INFO, p);
 	show_stack(p, NULL);
 }
+EXPORT_SYMBOL_GPL(sched_show_task);
 
 void show_state_filter(unsigned long state_filter)
 {
