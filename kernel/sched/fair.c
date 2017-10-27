@@ -31,6 +31,7 @@
 #include <linux/migrate.h>
 #include <linux/task_work.h>
 #include <linux/module.h>
+#include <linux/sched/isolation.h>
 
 #include "sched.h"
 #include <trace/events/sched.h>

@@ -80,6 +80,7 @@
 #include <linux/sched/core_ctl.h>
 #include <linux/cpufreq_times.h>
 #include <linux/mutex.h>
+#include <linux/sched/isolation.h>
 
 #include <asm/switch_to.h>
 #include <asm/tlb.h>

@@ -175,7 +175,6 @@ static void tick_sched_handle(struct tick_sched *ts, struct pt_regs *regs)
 
 #ifdef CONFIG_NO_HZ_FULL
 cpumask_var_t tick_nohz_full_mask;
-cpumask_var_t housekeeping_mask;
 bool tick_nohz_full_running;
 
 static bool can_stop_full_tick(void)
@@ -355,13 +354,6 @@ void __init tick_nohz_init(void)
 			return;
 	}
 
-	if (!alloc_cpumask_var(&housekeeping_mask, GFP_KERNEL)) {
-		WARN(1, "NO_HZ: Can't allocate not-full dynticks cpumask\n");
-		cpumask_clear(tick_nohz_full_mask);
-		tick_nohz_full_running = false;
-		return;
-	}
-
 	/*
 	 * Full dynticks uses irq work to drive the tick rescheduling on safe
 	 * locking contexts. But then we need irq work to raise its own
@@ -371,7 +363,6 @@ void __init tick_nohz_init(void)
 		pr_warning("NO_HZ: Can't run full dynticks because arch doesn't "
 			   "support irq work self-IPIs\n");
 		cpumask_clear(tick_nohz_full_mask);
-		cpumask_copy(housekeeping_mask, cpu_possible_mask);
 		tick_nohz_full_running = false;
 		return;
 	}
@@ -383,21 +374,12 @@ void __init tick_nohz_init(void)
 		cpumask_clear_cpu(cpu, tick_nohz_full_mask);
 	}
 
-	cpumask_andnot(housekeeping_mask,
-		       cpu_possible_mask, tick_nohz_full_mask);
-
 	for_each_cpu(cpu, tick_nohz_full_mask)
 		context_tracking_cpu_set(cpu);
 
 	cpu_notifier(tick_nohz_cpu_down_callback, 0);
 	pr_info("NO_HZ: Full dynticks CPUs: %*pbl.\n",
 		cpumask_pr_args(tick_nohz_full_mask));
-
-	/*
-	 * We need at least one CPU to handle housekeeping work such
-	 * as timekeeping, unbound timers, workqueues, ...
-	 */
-	WARN_ON_ONCE(cpumask_empty(housekeeping_mask));
 }
 #endif
 
