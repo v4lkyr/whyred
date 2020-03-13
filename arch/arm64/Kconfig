@@ -229,10 +229,29 @@ config THERMAL_SWITCH
 
 config KERNEL_CUSTOM_E7S
     default n
-    bool "Custom for hardware E7S_pcb"
+	bool "Custom for hardware E7S_pcb"
 	help
 	  Custom for E7S_pcb.
 
+choice
+	prompt "Cam Blobs"
+	default MIUI_NEW_CAM
+	help
+	  This option decides which cam version for whyred 
+	  will be included in kernel.
+
+config MIUI_NEW_CAM
+	bool "New cam blobs"
+	help
+	  This is new cam blobs.
+
+config MIUI_OLD_CAM
+	bool "Old cam blobs"
+	help
+	  This is old cam blobs.
+
+endchoice
+				
 if ARM64_DMA_USE_IOMMU
 
 config ARM64_DMA_IOMMU_ALIGNMENT
