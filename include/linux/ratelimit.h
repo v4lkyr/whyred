@@ -4,8 +4,8 @@
 #include <linux/param.h>
 #include <linux/spinlock.h>
 
-#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
-#define DEFAULT_RATELIMIT_BURST		10
+#define DEFAULT_RATELIMIT_INTERVAL	(10 * HZ)
+#define DEFAULT_RATELIMIT_BURST	10
 
 struct ratelimit_state {
 	raw_spinlock_t	lock;		/* protect the state */
