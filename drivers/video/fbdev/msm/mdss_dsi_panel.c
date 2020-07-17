@@ -41,7 +41,7 @@ struct mdss_dsi_ctrl_pdata *ctrl_pdata_whitepoint;
 EXPORT_SYMBOL(g_lcd_id);
 
 #ifdef CONFIG_KERNEL_CUSTOM_E7S
-extern bool enable_gesture_mode;
+static bool enable_gesture_mode;
 extern bool synaptics_gesture_func_on;
 #endif
 
@@ -3212,27 +3212,26 @@ static ssize_t msm_fb_lcd_name(struct device *dev,
 
 static DEVICE_ATTR(lcd_name,0664,msm_fb_lcd_name,NULL);
 static struct kobject *msm_lcd_name;
-static int msm_lcd_name_create_sysfs(void){
-   int ret;
-   msm_lcd_name=kobject_create_and_add("android_lcd",NULL);
-   if(msm_lcd_name==NULL){
-     pr_info("msm_lcd_name_create_sysfs_ failed\n");
-     ret=-ENOMEM;
-     return ret;
-   }
-   ret=sysfs_create_file(msm_lcd_name,&dev_attr_lcd_name.attr);
-   if(ret){
-    pr_info("%s failed \n",__func__);
-    kobject_del(msm_lcd_name);
-   }
-   return 0;
+static int msm_lcd_name_create_sysfs(void) {
+	int ret;
+	msm_lcd_name = kobject_create_and_add("android_lcd", NULL);
+	if (msm_lcd_name == NULL) {
+		pr_err("msm_lcd_name_create_sysfs_ failed\n");
+		return -ENOMEM;
+	}
+	ret = sysfs_create_file(msm_lcd_name, &dev_attr_lcd_name.attr);
+	if (ret) {
+		pr_err("%s failed \n", __func__);
+		kobject_del(msm_lcd_name);
+	}
+	return 0;
 }
 
 static ssize_t mdss_fb_get_whitepoint(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl = NULL;
-	int val0 =0;
+	int val0 = 0;
 	int val1 = 0;
 	ssize_t ret = 0;
 	
@@ -3244,20 +3243,19 @@ static ssize_t mdss_fb_get_whitepoint(struct device *dev,
 
 static DEVICE_ATTR(whitepoint, 0644, mdss_fb_get_whitepoint,NULL );
 static struct kobject *msm_whitepoint;
-static int msm_whitepoint_create_sysfs(void){
-   int ret;
-   msm_whitepoint=kobject_create_and_add("android_whitepoint",NULL);
-   if(msm_whitepoint==NULL){
-     pr_info("msm_whitepoint_create_sysfs_ failed\n");
-     ret=-ENOMEM;
-     return ret;
-   }
-   ret=sysfs_create_file(msm_whitepoint,&dev_attr_whitepoint.attr);
-   if(ret){
-    pr_info("%s failed \n",__func__);
-    kobject_del(msm_whitepoint);
-   }
-   return 0;
+static int msm_whitepoint_create_sysfs(void) {
+	int ret;
+	msm_whitepoint = kobject_create_and_add("android_whitepoint", NULL);
+	if (msm_whitepoint == NULL) {
+		pr_err("msm_whitepoint_create_sysfs failed\n");
+		return -ENOMEM;
+	}
+	ret = sysfs_create_file(msm_whitepoint, &dev_attr_whitepoint.attr);
+	if (ret) {
+		pr_err("%s failed \n", __func__);
+		kobject_del(msm_whitepoint);
+	}
+	return 0;
 }
 
 int mdss_dsi_panel_init(struct device_node *node,

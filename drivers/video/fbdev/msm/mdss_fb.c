@@ -967,9 +967,14 @@ int mdss_first_set_feature(struct mdss_panel_data *pdata, int first_ce_state, in
 		return -1;
 	}
 	
-	if((first_ce_state != -1) || (first_cabc_state != -1) || (first_srgb_state != -1) || (first_gamma_state != -1))
-		printk("%s,first_ce_state: %d,first_cabc_state: %d,first_srgb_state=%d,first_gamma_state=%d\n",__func__,
-			first_ce_state,first_cabc_state,first_srgb_state,first_gamma_state);
+	if ((first_ce_state != -1) || (first_cabc_state != -1) ||
+		(first_srgb_state != -1) || (first_gamma_state != -1))
+		pr_debug("%s,first_ce_state: %d, \
+				first_cabc_state: %d, \
+				first_srgb_state=%d, \
+				first_gamma_state=%d\n",__func__,
+				first_ce_state, first_cabc_state,
+				first_srgb_state, first_gamma_state);
 
 	switch(first_ce_state) {
 		case 0x1:
@@ -6084,9 +6089,11 @@ int mdss_prim_panel_fb_unblank(int timeout)
 {
 	int ret = 0;
 	struct msm_fb_data_type *mfd = NULL;
-        printk("prim_fbi 00\n");
+
+        pr_debug("prim_fbi 00\n");
+
 	if (prim_fbi) {
-		printk("prim_fbi 01\n");
+		pr_debug("prim_fbi 01\n");
 		mfd = (struct msm_fb_data_type *)prim_fbi->par;
 		ret = wait_event_timeout(mfd->resume_wait_q,
 				!atomic_read(&mfd->resume_pending),
@@ -6095,31 +6102,31 @@ int mdss_prim_panel_fb_unblank(int timeout)
 			pr_info("Primary fb resume timeout\n");
 			return -ETIMEDOUT;
 		}
-		printk("prim_fbi 03\n");
+		pr_debug("prim_fbi 03\n");
 #ifdef CONFIG_FRAMEBUFFER_CONSOLE
-		printk("prim_fbi 04\n");
+		pr_debug("prim_fbi 04\n");
 		console_lock();
 #endif
 		if (!lock_fb_info(prim_fbi)) {
 #ifdef CONFIG_FRAMEBUFFER_CONSOLE
-		printk("prim_fbi 05\n");
+			pr_debug("prim_fbi 05\n");
 			console_unlock();
 #endif
 			return -ENODEV;
 		}
 		if (prim_fbi->blank == FB_BLANK_UNBLANK) {
-		printk("prim_fbi 06\n");
+			pr_debug("prim_fbi 06\n");
 			unlock_fb_info(prim_fbi);
 #ifdef CONFIG_FRAMEBUFFER_CONSOLE
-		printk("prim_fbi 07\n");
+			pr_debug("prim_fbi 07\n");
 			console_unlock();
 #endif
-		printk("prim_fbi 08\n");
+			pr_debug("prim_fbi 08\n");
 			return 0;
 		}
-		printk("prim_fbi 09\n");
+		pr_debug("prim_fbi 09\n");
 		wake_lock(&prim_panel_wakelock);
-		printk("fb_blank 01\n");
+		pr_debug("fb_blank 01\n");
 		ret = fb_blank(prim_fbi, FB_BLANK_UNBLANK);
 		if (!ret) {
 			atomic_set(&prim_panel_is_on, true);
@@ -6131,14 +6138,13 @@ int mdss_prim_panel_fb_unblank(int timeout)
 			wake_unlock(&prim_panel_wakelock);
 		unlock_fb_info(prim_fbi);
 #ifdef CONFIG_FRAMEBUFFER_CONSOLE
-		printk("prim_fbi 10\n");
+		pr_debug("prim_fbi 10\n");
 		console_unlock();
 #endif
-		printk("return ret 01\n");
+		pr_debug("return ret 01\n");
 		return ret;
 	}
-
-		printk("prim_fbi 11\n");
+	pr_debug("prim_fbi 11\n");
 	pr_err("primary panel is not existed\n");
 	return -EINVAL;
 }
