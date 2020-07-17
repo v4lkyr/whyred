@@ -2274,13 +2274,10 @@ static void qpnp_hap_td_enable(struct timed_output_dev *dev, int time_ms)
 		time_ms = 10;
 
 #ifdef CONFIG_KERNEL_CUSTOM_E7S
-
-    pr_info("zjl hasfasda E7S haptic  =%d\n",time_ms);
-
+	pr_debug("zjl hasfasda E7S haptic=%d\n",time_ms);
  	vmax_mv = hap->vmax_mv;
 	qpnp_hap_vmax_config(hap, vmax_mv, false);
 #endif
-
 	hrtimer_cancel(&hap->hap_timer);
 
 	if (hap->auto_mode) {
@@ -2295,7 +2292,7 @@ static void qpnp_hap_td_enable(struct timed_output_dev *dev, int time_ms)
 	time_ms = (time_ms > hap->timeout_ms ? hap->timeout_ms : time_ms);
 	hap->play_time_ms = time_ms;
 	hap->state = 1;
-	pr_info("zjl aaa  haptic  =%d\n",time_ms);
+	pr_debug("zjl aaa haptic=%d\n",time_ms);
 	hrtimer_start(&hap->hap_timer,
 		ktime_set(time_ms / 1000, (time_ms % 1000) * 1000000),
 		HRTIMER_MODE_REL);
