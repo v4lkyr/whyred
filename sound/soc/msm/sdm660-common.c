@@ -3112,8 +3112,10 @@ static const struct of_device_id sdm660_asoc_machine_of_match[]  = {
 	
 static int pri_i2s_gpio_init(struct device *dev)
 {
-	pr_info("%s:enter.\n", __func__);
+	pr_debug("%s:enter.\n", __func__);
+
 	pri_i2s_pininfo.pinctrl = devm_pinctrl_get(dev);
+
 	if (IS_ERR(pri_i2s_pininfo.pinctrl)) {
 		pr_err("%s:could not get pinctrl.\n", __func__);
 		return -ENOENT;
@@ -3137,15 +3139,18 @@ static int pri_i2s_gpio_enable(bool enable)
 {
 	int ret;
 
-	pr_info("%s:enable = %d.\n", __func__, enable);
-	if(enable){
-		ret = pinctrl_select_state(pri_i2s_pininfo.pinctrl, pri_i2s_pininfo.pinctrl_state_active);
+	pr_debug("%s:enable = %d.\n", __func__, enable);
+
+	if (enable) {
+		ret = pinctrl_select_state(pri_i2s_pininfo.pinctrl,
+				pri_i2s_pininfo.pinctrl_state_active);
 		if (ret) {
 			pr_err("%s:could not set active pinctrl.\n", __func__);
 			return -ENOENT;
 		}
-	}else{
-		ret = pinctrl_select_state(pri_i2s_pininfo.pinctrl, pri_i2s_pininfo.pinctrl_state_sleep);
+	} else {
+		ret = pinctrl_select_state(pri_i2s_pininfo.pinctrl,
+				pri_i2s_pininfo.pinctrl_state_sleep);
 		if (ret) {
 			pr_err("%s:could not set sleep pinctrl.\n", __func__);
 			return -ENOENT;
