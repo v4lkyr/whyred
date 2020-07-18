@@ -359,49 +359,47 @@ jeita current = fcc - JEITA_CC_COMP_CFG_IN_UEFI*1000
 
 static int smblib_adjust_jeita_cc_config(struct smb_charger *chg,int val_u)
 {
-	int rc= 0;
-	int current_cc_minus_ua = 0;
+	int rc = 0;
+	int a = JEITA_CC_COMP_CFG_IN_UEFI * 1000;
+	int b = 0; /* current_cc_minus_ua */
 
+	pr_debug("smblib_adjust_jeita_cc_config fcc val_u = %d\n",
+				val_u);
 
-	pr_err("smblib_adjust_jeita_cc_config fcc val_u  = %d\n",val_u);
+	rc = smblib_get_charge_param(chg, &chg->param.jeita_cc_comp,
+				&b);
+	pr_debug("lct smblib_adjust_jeita_cc_config jeita cc current_cc_minus_ua = \
+				%d\n", b);
 
-	rc = smblib_get_charge_param(chg,&chg->param.jeita_cc_comp,&current_cc_minus_ua);
-	pr_err("lct smblib_adjust_jeita_cc_config jeita cc current_cc_minus_ua = %d\n",current_cc_minus_ua);
-
-	if((val_u == chg->batt_profile_fcc_ua) && (current_cc_minus_ua != JEITA_CC_COMP_CFG_IN_UEFI * 1000 ) )
-	{
-		rc = smblib_set_charge_param(chg,&chg->param.jeita_cc_comp,JEITA_CC_COMP_CFG_IN_UEFI * 1000 );
-		pr_err("smblib_adjust_jeita_cc_config jeita cc has changed ,write it back ,write result = %d\n",rc);
-		
-	}
-	else if((val_u < chg->batt_profile_fcc_ua) &&( (chg->batt_profile_fcc_ua - val_u) <= JEITA_CC_COMP_CFG_IN_UEFI * 1000) )
-	{
-		if(current_cc_minus_ua != ( JEITA_CC_COMP_CFG_IN_UEFI * 1000 - (chg->batt_profile_fcc_ua - val_u)))
-		{
-			current_cc_minus_ua = JEITA_CC_COMP_CFG_IN_UEFI * 1000 - (chg->batt_profile_fcc_ua - val_u);
-			rc = smblib_set_charge_param(chg,&chg->param.jeita_cc_comp,current_cc_minus_ua );
-			pr_err("smblib_adjust_jeita_cc_config jeita cc need to decrease to %d,write result = %d\n",current_cc_minus_ua,rc);
+	if ((val_u == chg->batt_profile_fcc_ua) && (b != a)) {
+		rc = smblib_set_charge_param(chg,
+			&chg->param.jeita_cc_comp, a);
+		pr_debug("smblib_adjust_jeita_cc_config jeita cc has changed, \
+				write it back, write result = %d\n", rc);
+	} else if ((val_u < chg->batt_profile_fcc_ua) &&
+		((chg->batt_profile_fcc_ua - val_u) <= a)) {
+		if (b != (a - (chg->batt_profile_fcc_ua - val_u))) {
+			b = a - (chg->batt_profile_fcc_ua - val_u);
+			rc = smblib_set_charge_param(chg,
+				&chg->param.jeita_cc_comp, b);
+			pr_debug("smblib_adjust_jeita_cc_config jeita cc need to \
+				decrease to %d, write result = %d\n",
+				b, rc);
+		} else {
+			pr_debug("smblib_adjust_jeita_cc_config jeita cc have \
+				decreased \n");
 		}
-		else
-		{
-			pr_err("smblib_adjust_jeita_cc_config jeita cc have decreased \n");
-		}
-		
+	} else if ((val_u < chg->batt_profile_fcc_ua) &&
+		((chg->batt_profile_fcc_ua - val_u) > a)) {
+		rc = smblib_set_charge_param(chg,
+				&chg->param.jeita_cc_comp, 0);
+		pr_debug("smblib_adjust_jeita_cc_config jeita need to set to zero, \
+			write result = %d\n", rc);
+	} else {
+		pr_debug("smblib_adjust_jeita_cc_config do nothing \n");
 	}
-	else if((val_u < chg->batt_profile_fcc_ua) &&( (chg->batt_profile_fcc_ua - val_u) > JEITA_CC_COMP_CFG_IN_UEFI * 1000) )
-	{
-		rc = smblib_set_charge_param(chg,&chg->param.jeita_cc_comp,0);
-		pr_err("smblib_adjust_jeita_cc_config jeita need to set to zero,write result = %d\n",rc);
-	}
-	else
-	{
-		pr_err("smblib_adjust_jeita_cc_config do nothing \n");
-	}
-	
-		
+
 	return rc;
-	
-	
 }
 #endif
 
@@ -640,9 +638,10 @@ static const struct apsd_result *smblib_update_usb_type(struct smb_charger *chg)
 		chg->real_charger_type = apsd_result->pst;
     chg->usb_psy_desc.type = apsd_result->pst;
 	}
-
-	smblib_err(chg, "lct battery charge APSD=%s PD=%d\n",
+/*
+	smblib_dbg(chg, "lct battery charge APSD=%s PD=%d\n",
 					apsd_result->name, chg->pd_active);
+*/
 	return apsd_result;
 }
 
@@ -2012,7 +2011,7 @@ int smblib_set_prop_system_temp_level(struct smb_charger *chg,
 		return -EINVAL;
 
 	#ifdef THERMAL_CONFIG_FB
-	pr_err("smblib_set_prop_system_temp_level val=%d, chg->system_temp_level=%d, LctThermal=%d, lct_backlight_off= %d, IsInCall=%d, hwc_check_india=%d\n ", 
+	pr_debug("smblib_set_prop_system_temp_level val=%d, chg->system_temp_level=%d, LctThermal=%d, lct_backlight_off= %d, IsInCall=%d, hwc_check_india=%d\n ", 
 		val->intval,chg->system_temp_level, LctThermal, lct_backlight_off, LctIsInCall, hwc_check_india);
 	
 	if (LctThermal == 0) {
@@ -3271,14 +3270,14 @@ int smblib_get_charge_current(struct smb_charger *chg,
 	/* QC 3.0 adapter */
 	if (apsd_result->bit & QC_3P0_BIT) {
 		*total_current_ua = HVDCP_CURRENT_UA;
-		pr_info("QC3.0 set icl to 2.9A\n");
+		pr_debug("QC3.0 set icl to 2.9A\n");
 		return 0;
 	}
 
 	/* QC 2.0 adapter */
 	if (apsd_result->bit & QC_2P0_BIT) {
 		*total_current_ua = HVDCP2_CURRENT_UA;
-		pr_info("QC2.0 set icl to 1.5A\n");
+		pr_debug("QC2.0 set icl to 1.5A\n");
 		return 0;
 	}
 

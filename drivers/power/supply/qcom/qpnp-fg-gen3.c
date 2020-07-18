@@ -4525,7 +4525,7 @@ static int fg_adjust_timebase(struct fg_chip *chip)
 	if ((chip->wa_flags & PM660_TSMC_OSC_WA) && chip->die_temp_chan) {
 		rc = iio_read_channel_processed(chip->die_temp_chan, &die_temp);
 		if (rc < 0) {
-			pr_err("Error in reading die_temp, rc:%d\n", rc);
+			pr_debug("Error in reading die_temp, rc:%d\n", rc);
 			return rc;
 		}
 
@@ -4659,7 +4659,7 @@ static irqreturn_t fg_delta_batt_temp_irq_handler(int irq, void *data)
 	if (chip->last_batt_temp != batt_temp) {
 		rc = fg_adjust_timebase(chip);
 		if (rc < 0)
-			pr_err("Error in adjusting timebase, rc=%d\n", rc);
+			pr_debug("Error in adjusting timebase, rc=%d\n", rc);
 
 		rc = fg_adjust_recharge_voltage(chip);
 		if (rc < 0)
@@ -4757,8 +4757,20 @@ static irqreturn_t fg_delta_msoc_irq_handler(int irq, void *data)
 		rc = fg_get_battery_current(chip, &ibatt_now);
 
 	if (!rc)
-		pr_err("lct battery SOC:%d voltage:%duV current:%duA temp:%d id:%dK charge_status:%d charge_type:%d health:%d input_present:%d temp_qt:%d \n",
-			msoc, volt_uv, ibatt_now, batt_temp, chip->batt_id_ohms / 1000, chip->charge_status, chip->charge_type, chip->health, input_present,temp_qt);
+		pr_debug("lct battery SOC:%d \
+				voltage:%duV \
+				current:%duA \
+				temp:%d \
+				id:%dK \
+				charge_status:%d \
+				charge_type:%d \
+				health:%d \
+				input_present:%d \
+				temp_qt:%d \n",
+				msoc, volt_uv, ibatt_now,
+				batt_temp, chip->batt_id_ohms / 1000,
+				chip->charge_status, chip->charge_type,
+				chip->health, input_present,temp_qt);
 
 	return IRQ_HANDLED;
 }
