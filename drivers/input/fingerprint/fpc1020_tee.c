@@ -106,7 +106,7 @@ static int vreg_setup(struct fpc1020_data *fpc1020, const char *name,
 	for (i = 0; i < ARRAY_SIZE(fpc1020->vreg); i++) {
 		const char *n = vreg_conf[i].name;
 
-		if (!strncmp(n, name, strlen(n)))
+		if (!strcmp(n, name))
 			goto found;
 	}
 
@@ -185,10 +185,11 @@ static ssize_t fingerdown_wait_set(struct device *dev,
 	struct fpc1020_data *fpc1020 = dev_get_drvdata(dev);
 
 	dev_dbg(fpc1020->dev, "%s\n", __func__);
-	if (!strncmp(buf, "enable", strlen("enable"))) {
+
+	if (!strcmp(buf, "enable")) {
 		pr_debug("wait_finger_down enable\n");
 		fpc1020->wait_finger_down = true;
-	} else if (!strncmp(buf, "disable", strlen("disable"))) {
+	} else if (!strcmp(buf, "disable")) {
 		pr_debug("wait_finger_down disable\n");
 		fpc1020->wait_finger_down = false;
 	} else
@@ -220,7 +221,7 @@ static int select_pin_ctl(struct fpc1020_data *fpc1020, const char *name)
 	for (i = 0; i < ARRAY_SIZE(fpc1020->pinctrl_state); i++) {
 		const char *n = pctl_names[i];
 
-		if (!strncmp(n, name, strlen(n))) {
+		if (!strcmp(n, name)) {
 			rc = pinctrl_select_state(fpc1020->fingerprint_pinctrl,
 					fpc1020->pinctrl_state[i]);
 			if (rc)
@@ -312,7 +313,7 @@ static ssize_t hw_reset_set(struct device *dev,
 	int rc;
 	struct fpc1020_data *fpc1020 = dev_get_drvdata(dev);
 
-	if (!strncmp(buf, "reset", strlen("reset"))) {
+	if (!strcmp(buf, "reset")) {
 		mutex_lock(&fpc1020->lock);
 		rc = hw_reset(fpc1020);
 		mutex_unlock(&fpc1020->lock);
@@ -397,9 +398,9 @@ static ssize_t device_prepare_set(struct device *dev,
 	int rc;
 	struct fpc1020_data *fpc1020 = dev_get_drvdata(dev);
 
-	if (!strncmp(buf, "enable", strlen("enable")))
+	if (!strcmp(buf, "enable"))
 		rc = device_prepare(fpc1020, true);
-	else if (!strncmp(buf, "disable", strlen("disable")))
+	else if (!strcmp(buf, "disable"))
 		rc = device_prepare(fpc1020, false);
 	else
 		return -EINVAL;
@@ -419,9 +420,10 @@ static ssize_t wakeup_enable_set(struct device *dev,
 	ssize_t ret = count;
 
 	mutex_lock(&fpc1020->lock);
-	if (!strncmp(buf, "enable", strlen("enable")))
+
+	if (!strcmp(buf, "enable"))
 		atomic_set(&fpc1020->wakeup_enabled, 1);
-	else if (!strncmp(buf, "disable", strlen("disable")))
+	else if (!strcmp(buf, "disable"))
 		atomic_set(&fpc1020->wakeup_enabled, 0);
 	else
 		ret = -EINVAL;
