@@ -1264,6 +1264,11 @@ static struct cpuhp_step cpuhp_bp_states[] = {
 		.teardown		= takedown_cpu,
 		.cant_stop		= true,
 	},
+	[CPUHP_RCUTREE_PREP] = {
+		.name = "RCU-tree prepare",
+		.startup = rcutree_prepare_cpu,
+		.teardown = rcutree_dead_cpu,
+	},
 #endif
 };
 
@@ -1286,6 +1291,15 @@ static struct cpuhp_step cpuhp_ap_states[] = {
 		.name			= "notify:online",
 		.startup		= notify_online,
 		.teardown		= notify_down_prepare,
+	},
+	[CPUHP_AP_RCUTREE_DYING] = {
+		.startup = NULL,
+		.teardown = rcutree_dying_cpu,
+	},
+	[CPUHP_AP_RCUTREE_ONLINE] = {
+		.name = "RCU-tree online",
+		.startup = rcutree_online_cpu,
+		.teardown = rcutree_offline_cpu,
 	},
 #endif
 	[CPUHP_ONLINE] = {
