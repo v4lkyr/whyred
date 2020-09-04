@@ -569,7 +569,8 @@ static void undo_cpu_down(unsigned int cpu, struct cpuhp_cpu_state *st)
 }
 
 /* Requires cpu_add_remove_lock to be held */
-static int __ref _cpu_down(unsigned int cpu, int tasks_frozen)
+static int __ref _cpu_down(unsigned int cpu, int tasks_frozen,
+			   enum cpuhp_state target)
 {
 	struct cpuhp_cpu_state *st = per_cpu_ptr(&cpuhp_state, cpu);
 	int prev_state, ret = 0;
@@ -587,7 +588,7 @@ static int __ref _cpu_down(unsigned int cpu, int tasks_frozen)
 	cpuhp_tasks_frozen = tasks_frozen;
 
 	prev_state = st->state;
-	st->target = CPUHP_OFFLINE;
+	st->target = target;
 	for (; st->state > st->target; st->state--) {
 		struct cpuhp_step *step = cpuhp_bp_states + st->state;
 
@@ -608,7 +609,7 @@ static int __ref _cpu_down(unsigned int cpu, int tasks_frozen)
 	return ret;
 }
 
-int cpu_down(unsigned int cpu)
+static int do_cpu_down(unsigned int cpu, enum cpuhp_state target)
 {
 	struct cpumask newmask;
 	int err;
@@ -627,11 +628,16 @@ int cpu_down(unsigned int cpu)
 		goto out;
 	}
 
-	err = _cpu_down(cpu, 0);
+	err = _cpu_down(cpu, 0, target);
 
 out:
 	cpu_maps_update_done();
 	return err;
+}
+
+int cpu_down(unsigned int cpu)
+{
+	return do_cpu_down(cpu, CPUHP_OFFLINE);
 }
 EXPORT_SYMBOL(cpu_down);
 #endif /*CONFIG_HOTPLUG_CPU*/
@@ -701,7 +707,7 @@ static void undo_cpu_up(unsigned int cpu, struct cpuhp_cpu_state *st)
 }
 
 /* Requires cpu_add_remove_lock to be held */
-static int _cpu_up(unsigned int cpu, int tasks_frozen)
+static int _cpu_up(unsigned int cpu, int tasks_frozen, enum cpuhp_state target)
 {
 	struct cpuhp_cpu_state *st = per_cpu_ptr(&cpuhp_state, cpu);
 	struct task_struct *idle;
@@ -724,7 +730,7 @@ static int _cpu_up(unsigned int cpu, int tasks_frozen)
 	cpuhp_tasks_frozen = tasks_frozen;
 
 	prev_state = st->state;
-	st->target = CPUHP_ONLINE;
+	st->target = target;
 	while (st->state < st->target) {
 		struct cpuhp_step *step;
 
@@ -771,7 +777,7 @@ static int switch_to_fair_policy(void)
 	return sched_setscheduler_nocheck(current, SCHED_NORMAL, &param);
 }
 
-int cpu_up(unsigned int cpu)
+static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
 {
 	int err = 0;
 	int switch_err = 0;
@@ -800,8 +806,7 @@ int cpu_up(unsigned int cpu)
 		goto out;
 	}
 
-	err = _cpu_up(cpu, 0);
-
+	err = _cpu_up(cpu, 0, target);
 out:
 	cpu_maps_update_done();
 
@@ -813,6 +818,11 @@ out:
 	}
 
 	return err;
+}
+
+int cpu_up(unsigned int cpu)
+{
+	return do_cpu_up(cpu, CPUHP_ONLINE);
 }
 EXPORT_SYMBOL_GPL(cpu_up);
 
@@ -837,7 +847,7 @@ int disable_nonboot_cpus(void)
 		if (cpu == first_cpu)
 			continue;
 		trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
-		error = _cpu_down(cpu, 1);
+		error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
 		trace_suspend_resume(TPS("CPU_OFF"), cpu, false);
 		if (!error)
 			cpumask_set_cpu(cpu, frozen_cpus);
@@ -888,7 +898,7 @@ void enable_nonboot_cpus(void)
 
 	for_each_cpu(cpu, frozen_cpus) {
 		trace_suspend_resume(TPS("CPU_ON"), cpu, true);
-		error = _cpu_up(cpu, 1);
+		error = _cpu_up(cpu, 1, CPUHP_ONLINE);
 		trace_suspend_resume(TPS("CPU_ON"), cpu, false);
 		if (!error) {
 			pr_debug("CPU%d is up\n", cpu);
