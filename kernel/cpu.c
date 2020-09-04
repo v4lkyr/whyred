@@ -879,40 +879,6 @@ const struct cpumask *const cpu_perf_mask = cpu_possible_mask;
 #endif
 EXPORT_SYMBOL(cpu_perf_mask);
 
-void set_cpu_possible(unsigned int cpu, bool possible)
-{
-	if (possible)
-		cpumask_set_cpu(cpu, &__cpu_possible_mask);
-	else
-		cpumask_clear_cpu(cpu, &__cpu_possible_mask);
-}
-
-void set_cpu_present(unsigned int cpu, bool present)
-{
-	if (present)
-		cpumask_set_cpu(cpu, &__cpu_present_mask);
-	else
-		cpumask_clear_cpu(cpu, &__cpu_present_mask);
-}
-
-void set_cpu_online(unsigned int cpu, bool online)
-{
-	if (online) {
-		cpumask_set_cpu(cpu, &__cpu_online_mask);
-		cpumask_set_cpu(cpu, &__cpu_active_mask);
-	} else {
-		cpumask_clear_cpu(cpu, &__cpu_online_mask);
-	}
-}
-
-void set_cpu_active(unsigned int cpu, bool active)
-{
-	if (active)
-		cpumask_set_cpu(cpu, &__cpu_active_mask);
-	else
-		cpumask_clear_cpu(cpu, &__cpu_active_mask);
-}
-
 void set_cpu_isolated(unsigned int cpu, bool isolated)
 {
 	if (isolated)
