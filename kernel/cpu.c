@@ -849,23 +849,15 @@ struct cpumask __cpu_possible_mask __read_mostly
 struct cpumask __cpu_possible_mask __read_mostly;
 #endif
 EXPORT_SYMBOL(__cpu_possible_mask);
-const struct cpumask *const cpu_possible_mask = &__cpu_possible_mask;
-EXPORT_SYMBOL(cpu_possible_mask);
 
 struct cpumask __cpu_online_mask __read_mostly;
 EXPORT_SYMBOL(__cpu_online_mask);
-const struct cpumask *const cpu_online_mask = &__cpu_online_mask;
-EXPORT_SYMBOL(cpu_online_mask);
 
 struct cpumask __cpu_present_mask __read_mostly;
 EXPORT_SYMBOL(__cpu_present_mask);
-const struct cpumask *const cpu_present_mask = &__cpu_present_mask;
-EXPORT_SYMBOL(cpu_present_mask);
 
 struct cpumask __cpu_active_mask __read_mostly;
 EXPORT_SYMBOL(__cpu_active_mask);
-const struct cpumask *const cpu_active_mask = &__cpu_active_mask;
-EXPORT_SYMBOL(cpu_active_mask);
 
 static DECLARE_BITMAP(cpu_isolated_bits, CONFIG_NR_CPUS) __read_mostly;
 const struct cpumask *const cpu_isolated_mask = to_cpumask(cpu_isolated_bits);
