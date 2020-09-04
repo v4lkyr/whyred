@@ -6572,23 +6572,6 @@ static int sched_cpu_active(struct notifier_block *nfb,
 		set_cpu_rq_start_time();
 		return NOTIFY_OK;
 
-	case CPU_ONLINE:
-		/*
-		 * At this point a starting CPU has marked itself as online via
-		 * set_cpu_online(). But it might not yet have marked itself
-		 * as active, which is essential from here on.
-		 */
-#ifdef CONFIG_SCHED_SMT
-		/*
-		 * When going up, increment the number of cores with SMT present.
-		 */
-		if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
-			atomic_inc(&sched_smt_present);
-#endif
-		set_cpu_active(cpu, true);
-		stop_machine_unpark(cpu);
-		return NOTIFY_OK;
-
 	case CPU_DOWN_FAILED:
 #ifdef CONFIG_SCHED_SMT
 		/* Same as for CPU_ONLINE */
