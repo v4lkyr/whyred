@@ -590,7 +590,7 @@ void __init smp_init_cpus(void)
 				      acpi_parse_gic_cpu_interface, 0);
 
 	if (cpu_count > NR_CPUS)
-		pr_warn("no. of cores (%d) greater than configured maximum of %d - clipping\n",
+		pr_warn("no. of cores (%d) greater than configured maximum of %u - clipping\n",
 			cpu_count, NR_CPUS);
 
 	if (!bootcpu_valid) {
