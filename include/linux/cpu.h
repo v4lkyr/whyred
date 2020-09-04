@@ -16,6 +16,7 @@
 #include <linux/node.h>
 #include <linux/compiler.h>
 #include <linux/cpumask.h>
+#include <linux/cpuhotplug.h>
 
 struct device;
 struct device_node;
@@ -39,6 +40,9 @@ struct cpu_pwr_stats {
 	bool throttling;
 	int len;
 };
+
+extern void boot_cpu_init(void);
+extern void boot_cpu_state_init(void);
 
 extern int register_cpu(struct cpu *cpu, int num);
 extern struct device *get_cpu_device(unsigned cpu);
@@ -293,11 +297,6 @@ static inline void enable_nonboot_cpus(void) {}
 
 struct cpu_pwr_stats *get_cpu_pwr_stats(void);
 void trigger_cpu_pwr_stats_calc(void);
-
-enum cpuhp_state {
-	CPUHP_OFFLINE,
-	CPUHP_ONLINE,
-};
 
 void cpu_startup_entry(enum cpuhp_state state);
 
