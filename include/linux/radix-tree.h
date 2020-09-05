@@ -25,7 +25,7 @@
 #include <linux/types.h>
 #include <linux/bug.h>
 #include <linux/kernel.h>
-#include <linux/rcupdate.h>
+#include <linux/rcupdate_wait.h>
 
 /*
  * An indirect pointer (root->rnode pointing to a radix_tree_node, rather

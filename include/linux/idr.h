@@ -15,7 +15,7 @@
 #include <linux/types.h>
 #include <linux/bitops.h>
 #include <linux/init.h>
-#include <linux/rcupdate.h>
+#include <linux/rcupdate_wait.h>
 
 /*
  * We want shallower trees and thus more bits covered at each layer.  8
