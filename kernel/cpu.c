@@ -812,6 +812,9 @@ static int __ref _cpu_down(unsigned int cpu, int tasks_frozen,
 	if (!cpu_present(cpu))
 		return -EINVAL;
 
+	if (!tasks_frozen && !cpu_isolated(cpu) && num_online_uniso_cpus() == 1)
+		return -EBUSY;
+
 	cpu_hotplug_begin();
 
 	cpuhp_tasks_frozen = tasks_frozen;
@@ -1704,9 +1707,8 @@ EXPORT_SYMBOL(__cpu_present_mask);
 struct cpumask __cpu_active_mask __read_mostly;
 EXPORT_SYMBOL(__cpu_active_mask);
 
-static DECLARE_BITMAP(cpu_isolated_bits, CONFIG_NR_CPUS) __read_mostly;
-const struct cpumask *const cpu_isolated_mask = to_cpumask(cpu_isolated_bits);
-EXPORT_SYMBOL(cpu_isolated_mask);
+struct cpumask __cpu_isolated_mask __read_mostly;
+EXPORT_SYMBOL(__cpu_isolated_mask);
 
 #if CONFIG_LITTLE_CPU_MASK
 static const unsigned long lp_cpu_bits = CONFIG_LITTLE_CPU_MASK;
@@ -1724,12 +1726,9 @@ const struct cpumask *const cpu_perf_mask = cpu_possible_mask;
 #endif
 EXPORT_SYMBOL(cpu_perf_mask);
 
-void set_cpu_isolated(unsigned int cpu, bool isolated)
+void init_cpu_isolated(const struct cpumask *src)
 {
-	if (isolated)
-		cpumask_set_cpu(cpu, to_cpumask(cpu_isolated_bits));
-	else
-		cpumask_clear_cpu(cpu, to_cpumask(cpu_isolated_bits));
+	cpumask_copy(&__cpu_isolated_mask, src);
 }
 
 void init_cpu_present(const struct cpumask *src)
@@ -1745,11 +1744,6 @@ void init_cpu_possible(const struct cpumask *src)
 void init_cpu_online(const struct cpumask *src)
 {
 	cpumask_copy(&__cpu_online_mask, src);
-}
-
-void init_cpu_isolated(const struct cpumask *src)
-{
-	cpumask_copy(to_cpumask(cpu_isolated_bits), src);
 }
 
 enum cpu_mitigations cpu_mitigations = CPU_MITIGATIONS_AUTO;
