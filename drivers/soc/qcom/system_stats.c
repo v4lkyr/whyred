@@ -298,7 +298,6 @@ static int msm_rpmstats_probe(struct platform_device *pdev)
 	void __iomem *offset_addr = NULL;
 	struct resource res;
 	int i, ret = 0;
-	size_t master_name_len = 0;
 
 	if (!pdev)
 		return -EINVAL;
@@ -378,9 +377,8 @@ static int msm_rpmstats_probe(struct platform_device *pdev)
 			pr_err("%s:Failed to get memory\n", __func__);
 			return -ENOMEM;
 		}
-		master_name_len = strlen(master_name);
-		strlcpy(ss.master[i], master_name,
-					master_name_len + 1);
+		strscpy(ss.master[i], master_name,
+					sizeof(ss.master[i]));
 	}
 
 	dent = debugfs_create_file("system_stats", S_IRUGO, NULL,
