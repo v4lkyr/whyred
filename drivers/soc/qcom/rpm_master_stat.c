@@ -351,7 +351,7 @@ static struct msm_rpm_master_stats_platform_data
 {
 	struct msm_rpm_master_stats_platform_data *pdata;
 	struct device_node *node = dev->of_node;
-	int rc = 0, i, rpm_master_name_len = 0;
+	int rc = 0, i = 0;
 
 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
 	if (!pdata)
@@ -395,9 +395,9 @@ static struct msm_rpm_master_stats_platform_data
 				strlen(master_name) + 1, GFP_KERNEL);
 		if (!pdata->masters[i])
 			goto err;
-		rpm_master_name_len = strlen(master_name);
-		strlcpy(pdata->masters[i], master_name,
-					rpm_master_name_len + 1);
+
+		strscpy(pdata->masters[i], master_name,
+					sizeof(pdata->masters[i]));
 	}
 	return pdata;
 err:
