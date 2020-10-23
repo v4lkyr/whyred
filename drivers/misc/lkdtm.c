@@ -343,12 +343,18 @@ static void do_overwritten(void)
 	return;
 }
 
-static noinline void corrupt_stack(void)
+static noinline void __lkdtm_CORRUPT_STACK(void *stack)
 {
 	/* Use default char array length that triggers stack protection. */
 	char data[8];
 
-	memset((void *)data, 'a', sizeof(char)*8);
+	memset(stack, 'a', sizeof(char)*8);
+}
+
+static noinline void corrupt_stack(void)
+{
+	__lkdtm_CORRUPT_STACK(&data);
+
 	pr_info("Corrupted stack with '%16s'...\n", data);
 }
 
