@@ -1621,9 +1621,11 @@ static tSirRetStatus lim_send_tdls_setup_rsp_frame(tpAniSirGlobal pMac,
 			((pMac->lim.gLimTDLSUapsdMask & 0x04) >> 2);
 		tdlsSetupRsp.WMMInfoStation.acbe_uapsd =
 			((pMac->lim.gLimTDLSUapsdMask & 0x08) >> 3);
+#ifdef CONFIG_QCA_CLD_DEBUG
 		if (wlan_cfg_get_int(pMac, WNI_CFG_MAX_SP_LENGTH, &val) !=
 		    eSIR_SUCCESS)
 			pe_warn("could not retrieve Max SP Length");
+#endif
 			tdlsSetupRsp.WMMInfoStation.max_sp_length = (uint8_t) val;
 		tdlsSetupRsp.WMMInfoStation.present = 1;
 	} else {
