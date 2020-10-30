@@ -1,0 +1,13 @@
+time (make O=out clean && \
+make O=out \
+ARCH=arm64 \
+SUBARCH=arm64 \
+CC=/home/v4lkyr/android/tools/toolchains/proton-clang/bin/clang \
+CROSS_COMPILE=/home/v4lkyr/android/tools/toolchains/proton-clang/bin/aarch64-linux-gnu- \
+CROSS_COMPILE_ARM32=/home/v4lkyr/android/tools/toolchains/proton-clang/bin/arm-linux-gnueabi- \
+LLVM_AR=/home/v4lkyr/android/tools/toolchains/proton-clang/bin/llvm-ar \
+LLVM_NM=/home/v4lkyr/android/tools/toolchains/proton-clang/bin/llvm-nm \
+OBJCOPY=/home/v4lkyr/android/tools/toolchains/proton-clang/bin/llvm-objcopy \
+OBJDUMP=/home/v4lkyr/android/tools/toolchains/proton-clang/bin/llvm-objdump \
+STRIP=/home/v4lkyr/android/tools/toolchains/kdrag0n/bin/llvm-strip \
+-j$(nproc --all) $1 $2)
