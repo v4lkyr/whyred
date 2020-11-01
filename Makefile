@@ -356,14 +356,26 @@ DEPMOD		= depmod
 PERL		= perl
 PYTHON		= python
 CHECK		= sparse
+ifeq ($(cc-name),gcc)
+OPT_FLAGS	= -march=armv8-a+crc+crypto \
+			  -mcpu=cortex-a73.cortex-a53 \
+			  -mtune=cortex-a73.cortex-a53 \
+			  -fgraphite \
+			  -fgraphite-identity \
+			  -floop-nest-optimize \
+			  -ffast-math \
+			  -ftree-vectorize \
+			  -floop-parallelize-all \
+			  -ftree-loop-distribution
+endif
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   =
-AFLAGS_MODULE   =
+CFLAGS_MODULE   = $(OPT_FLAGS)
+AFLAGS_MODULE   = $(OPT_FLAGS)
 LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
-AFLAGS_KERNEL	=
+CFLAGS_KERNEL	= $(OPT_FLAGS)
+AFLAGS_KERNEL	= $(OPT_FLAGS)
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage -fno-tree-loop-im
 CFLAGS_KCOV	= -fsanitize-coverage=trace-pc
 
@@ -392,16 +404,17 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -std=gnu89 $(call cc-option,-fno-PIE)
+		   -std=gnu89 $(call cc-option,-fno-PIE) $(OPT_FLAGS)
 
 ifeq ($(TARGET_BOARD_TYPE),auto)
 KBUILD_CFLAGS    += -DCONFIG_PLATFORM_AUTO
 endif
-KBUILD_AFLAGS_KERNEL :=
-KBUILD_CFLAGS_KERNEL :=
-KBUILD_AFLAGS   := -D__ASSEMBLY__ $(call cc-option,-fno-PIE)
-KBUILD_AFLAGS_MODULE  := -DMODULE
-KBUILD_CFLAGS_MODULE  := -DMODULE
+
+KBUILD_AFLAGS_KERNEL := $(OPT_FLAGS)
+KBUILD_CFLAGS_KERNEL := $(OPT_FLAGS)
+KBUILD_AFLAGS   := -D__ASSEMBLY__ $(call cc-option,-fno-PIE) $(OPT_FLAGS)
+KBUILD_AFLAGS_MODULE  := -DMODULE $(OPT_FLAGS)
+KBUILD_CFLAGS_MODULE  := -DMODULE $(OPT_FLAGS)
 KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
 CLANG_FLAGS :=
 
@@ -687,6 +700,8 @@ KBUILD_CFLAGS	+= -mllvm -polly \
 		   -mllvm -polly-detect-keep-going \
 		   -mllvm -polly-vectorizer=stripmine \
 		   -mllvm -polly-invariant-load-hoisting
+KBUILD_AFLAGS	+= -march=armv8-a+crc+crypto -mcpu=kryo -mtune=kryo
+KBUILD_CFLAGS	+= -march=armv8-a+crc+crypto -mcpu=kryo -mtune=kryo
 else
 KBUILD_CFLAGS	+=
 endif
