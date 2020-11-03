@@ -1,0 +1,7 @@
+time (make O=out clean && \
+make O=out \
+ARCH=arm64 \
+SUBARCH=arm64 \
+CROSS_COMPILE=/home/v4lkyr/android/tools/toolchains/crosstool-gcc/aarch64-dark-elf/bin/aarch64-dark-elf- \
+CROSS_COMPILE_ARM32=/home/v4lkyr/android/tools/toolchains/crosstool-gcc/arm-dark-eabi/bin/arm-dark-eabi- \
+-j$(nproc --all) $1 $2)
