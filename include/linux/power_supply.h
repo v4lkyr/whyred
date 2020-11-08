@@ -276,6 +276,7 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_RERUN_APSD,
 	POWER_SUPPLY_PROP_PARALLEL_BATFET_MODE,
 	POWER_SUPPLY_PROP_MIN_ICL,
+	POWER_SUPPLY_PROP_PARALLEL_FCC_MAX,
 	/* Local extensions of type int64_t */
 	POWER_SUPPLY_PROP_CHARGE_COUNTER_EXT,
 	/* Properties of type `const char *' */
