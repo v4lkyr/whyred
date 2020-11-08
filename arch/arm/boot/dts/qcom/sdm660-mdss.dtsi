@@ -480,7 +480,7 @@
 	};
 
 	mdss_dp_ctrl: qcom,dp_ctrl@c990000 {
-		status = "ok";
+		status = "disabled";
 		cell-index = <0>;
 		compatible = "qcom,mdss-dp";
 		qcom,mdss-fb-map = <&mdss_fb2>;
