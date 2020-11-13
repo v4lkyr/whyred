@@ -31,6 +31,7 @@
  * TOTAL CUMULATIVE LIABILITY TO ANY PARTY SHALL NOT EXCEED ONE HUNDRED U.S.
  * DOLLARS.
  */
+#include <uapi/linux/sched/types.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/slab.h>
@@ -43,6 +44,8 @@
 #include <linux/input/synaptics_dsx.h>
 #include "synaptics_dsx_core.h"
 #include <linux/input/mt.h>
+#include <linux/kthread.h>
+#include <linux/sched/rt.h>
 
 #ifdef CONFIG_TOUCHSCREEN_COMMON
 #include <linux/input/tp_common.h>
@@ -663,8 +666,9 @@ struct synaptics_rmi4_exp_fn_data {
 	bool queue_work;
 	struct mutex mutex;
 	struct list_head list;
-	struct delayed_work work;
-	struct workqueue_struct *workqueue;
+	struct kthread_work touch_work;
+	struct kthread_worker touch_worker;
+	struct task_struct *touch_worker_thread;
 	struct synaptics_rmi4_data *rmi4_data;
 };
 
@@ -4140,7 +4144,7 @@ exit:
 	return retval;
 }
 
-static void synaptics_rmi4_exp_fn_work(struct work_struct *work)
+static void synaptics_rmi4_exp_fn_work(struct kthread_work *work)
 {
 	struct synaptics_rmi4_exp_fhandler *exp_fhandler;
 	struct synaptics_rmi4_exp_fhandler *exp_fhandler_temp;
@@ -4207,11 +4211,8 @@ void synaptics_rmi4_new_function(struct synaptics_rmi4_exp_fn *exp_fn,
 exit:
 	mutex_unlock(&exp_data.mutex);
 
-	if (exp_data.queue_work) {
-		queue_delayed_work(exp_data.workqueue,
-				&exp_data.work,
-				msecs_to_jiffies(EXP_FN_WORK_DELAY_MS));
-	}
+	if (exp_data.queue_work)
+		kthread_queue_work(&exp_data.touch_worker, &exp_data.touch_work);
 }
 EXPORT_SYMBOL(synaptics_rmi4_new_function);
 
@@ -4222,6 +4223,8 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 
 	const struct synaptics_dsx_hw_interface *hw_if;
 	const struct synaptics_dsx_board_data *bdata;
+
+	struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
 
 	hw_if = pdev->dev.platform_data;
 	if (!hw_if) {
@@ -4394,13 +4397,21 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 			create_singlethread_workqueue("dsx_rebuild_workqueue");
 	INIT_DELAYED_WORK(&rmi4_data->rb_work, synaptics_rmi4_rebuild_work);
 
-	exp_data.workqueue = create_singlethread_workqueue("dsx_exp_workqueue");
-	INIT_DELAYED_WORK(&exp_data.work, synaptics_rmi4_exp_fn_work);
+	kthread_init_worker(&exp_data.touch_worker);
+	exp_data.touch_worker_thread = kthread_create(kthread_worker_fn,
+													&exp_data.touch_worker,
+													"touch_worker_thread");
+	if (IS_ERR(exp_data.touch_worker_thread)) {
+		pr_err("%s: Cannot init touch_worker kthread", __func__);
+		return -EFAULT;
+	}
+	sched_setscheduler(exp_data.touch_worker_thread, SCHED_FIFO, &param);
+	wake_up_process(exp_data.touch_worker_thread);
+	kthread_init_work(&exp_data.touch_work, synaptics_rmi4_exp_fn_work);
 	exp_data.rmi4_data = rmi4_data;
 	exp_data.queue_work = true;
-	queue_delayed_work(exp_data.workqueue,
-			&exp_data.work,
-			0);
+	kthread_queue_work(&exp_data.touch_worker,
+						&exp_data.touch_work);
 
 #ifdef FB_READY_RESET
 	rmi4_data->reset_workqueue =
@@ -4480,10 +4491,6 @@ static int synaptics_rmi4_remove(struct platform_device *pdev)
 	flush_workqueue(rmi4_data->reset_workqueue);
 	destroy_workqueue(rmi4_data->reset_workqueue);
 #endif
-
-	cancel_delayed_work_sync(&exp_data.work);
-	flush_workqueue(exp_data.workqueue);
-	destroy_workqueue(exp_data.workqueue);
 
 	cancel_delayed_work_sync(&rmi4_data->rb_work);
 	flush_workqueue(rmi4_data->rb_workqueue);
