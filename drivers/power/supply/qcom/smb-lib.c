@@ -33,14 +33,7 @@ extern int hwc_check_global;
 		__func__, ##__VA_ARGS__)	\
 
 #define smblib_dbg(chg, reason, fmt, ...)			\
-	do {							\
-		if (*chg->debug_mask & (reason))		\
-			pr_debug("%s: %s: " fmt, chg->name,	\
-				__func__, ##__VA_ARGS__);	\
-		else						\
-			pr_debug("%s: %s: " fmt, chg->name,	\
-				__func__, ##__VA_ARGS__);	\
-	} while (0)
+	do { } while (0)
 
 static bool is_secure(struct smb_charger *chg, int addr)
 {
@@ -3691,7 +3684,7 @@ int smblib_get_prop_slave_current_now(struct smb_charger *chg,
 irqreturn_t smblib_handle_debug(int irq, void *data)
 {
 	struct smb_irq_data *irq_data = data;
-	struct smb_charger *chg = irq_data->parent_data;
+	struct smb_charger *chg __maybe_unused = irq_data->parent_data;
 
 	smblib_dbg(chg, PR_INTERRUPT, "IRQ: %s\n", irq_data->name);
 	return IRQ_HANDLED;
