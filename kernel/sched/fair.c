@@ -35,7 +35,9 @@
 #include "sched.h"
 #include <trace/events/sched.h>
 #include "tune.h"
+#ifdef CONFIG_SCHED_WALT
 #include "walt.h"
+#endif
 
 /*
  * Targeted preemption latency for CPU-bound tasks:
@@ -7631,10 +7633,10 @@ static inline int find_best_target(struct task_struct *p, int *backup_cpu,
 
 			if (!cpu_online(i))
 				continue;
-
+#ifdef CONFIG_SCHED_WALT
 			if (walt_cpu_high_irqload(i))
 				continue;
-
+#endif
 			/*
 			 * p's blocked utilization is still accounted for on prev_cpu
 			 * so prev_cpu will receive a negative bias due to the double

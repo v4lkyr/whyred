@@ -18,7 +18,9 @@
 
 #include <linux/slab.h>
 
+#ifdef CONFIG_SCHED_WALT
 #include "walt.h"
+#endif
 
 struct dl_bandwidth def_dl_bandwidth;
 
