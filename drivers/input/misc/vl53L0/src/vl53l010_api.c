@@ -1108,20 +1108,21 @@ VL53L0_Error VL53L010_GetMeasurementTimingBudgetMicroSeconds(VL53L0_DEV Dev,
 	Status = VL53L010_GetWrapAroundCheckEnable(Dev, &Byte);
 
 	if (Status == VL53L0_ERROR_NONE) {
-		VL53L010_get_vcsel_pulse_period(Dev,
-						&CurrentVCSELPulsePeriodPClk,
-						0);
-		CurrentVCSELPulsePeriod =
-		    VL53L010_encode_vcsel_period(CurrentVCSELPulsePeriodPClk);
-
-		/* Read from register */
-		Status = VL53L0_RdWord(Dev, VL53L010_REG_RNGA_TIMEOUT_MSB,
-				       &encodedTimeOut);
+		Status = VL53L010_get_vcsel_pulse_period(Dev,
+						&CurrentVCSELPulsePeriodPClk, 0);
 		if (Status == VL53L0_ERROR_NONE) {
-			RangATimingBudgetMicroSeconds =
-			    VL53L010_calc_ranging_wait_us(Dev,
-							  encodedTimeOut,
-					  CurrentVCSELPulsePeriod);
+			CurrentVCSELPulsePeriod = VL53L010_encode_vcsel_period(
+				CurrentVCSELPulsePeriodPClk);
+
+			/* Read from register */
+			Status = VL53L0_RdWord(Dev, VL53L010_REG_RNGA_TIMEOUT_MSB,
+				&encodedTimeOut);
+			if (Status == VL53L0_ERROR_NONE) {
+				RangATimingBudgetMicroSeconds =
+				VL53L010_calc_ranging_wait_us(Dev,
+					encodedTimeOut,
+					CurrentVCSELPulsePeriod);
+			}
 		}
 	}
 
@@ -1133,30 +1134,31 @@ VL53L0_Error VL53L010_GetMeasurementTimingBudgetMicroSeconds(VL53L0_DEV Dev,
 				   MeasurementTimingBudgetMicroSeconds,
 				   *pMeasurementTimingBudgetMicroSeconds);
 		} else {
-			VL53L010_get_vcsel_pulse_period(Dev,
-					&CurrentVCSELPulsePeriodPClk,
-							1);
-			CurrentVCSELPulsePeriod =
-			    VL53L010_encode_vcsel_period
-			    (CurrentVCSELPulsePeriodPClk);
-
-			/* Read from register */
-			Status = VL53L0_RdWord(Dev,
-					       VL53L010_REG_RNGB1_TIMEOUT_MSB,
-					       &encodedTimeOut);
+			Status = VL53L010_get_vcsel_pulse_period(Dev,
+					&CurrentVCSELPulsePeriodPClk, 1);
 			if (Status == VL53L0_ERROR_NONE) {
-				RangBTimingBudgetMicroSeconds =
-				    VL53L010_calc_ranging_wait_us(Dev,
-						  encodedTimeOut,
-						  CurrentVCSELPulsePeriod);
-			}
+				CurrentVCSELPulsePeriod = VL53L010_encode_vcsel_period(
+					CurrentVCSELPulsePeriodPClk);
 
-			*pMeasurementTimingBudgetMicroSeconds =
-			    RangATimingBudgetMicroSeconds +
-			    RangBTimingBudgetMicroSeconds + 7000;
-			VL53L010_SETPARAMETERFIELD(Dev,
-				   MeasurementTimingBudgetMicroSeconds,
-				   *pMeasurementTimingBudgetMicroSeconds);
+				/* Read from register */
+				Status = VL53L0_RdWord(Dev,
+				VL53L010_REG_RNGB1_TIMEOUT_MSB,
+							&encodedTimeOut);
+				if (Status == VL53L0_ERROR_NONE) {
+					RangBTimingBudgetMicroSeconds =
+					VL53L010_calc_ranging_wait_us(
+						Dev, encodedTimeOut,
+						CurrentVCSELPulsePeriod);
+				}
+
+				*pMeasurementTimingBudgetMicroSeconds =
+					RangATimingBudgetMicroSeconds +
+					RangBTimingBudgetMicroSeconds +
+					7000;
+				VL53L010_SETPARAMETERFIELD(Dev,
+				MeasurementTimingBudgetMicroSeconds,
+					*pMeasurementTimingBudgetMicroSeconds);
+			}
 		}
 	}
 
