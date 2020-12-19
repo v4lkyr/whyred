@@ -4164,7 +4164,7 @@ exit:
 	mutex_unlock(&exp_data.mutex);
 
 	if (exp_data.queue_work)
-		queue_kthread_work(&exp_data.touch_worker,
+		kthread_queue_work(&exp_data.touch_worker,
 								&exp_data.touch_work);
 
 	return;
@@ -4384,7 +4384,7 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 												WQ_HIGHPRI | WQ_UNBOUND, 0);
 	INIT_DELAYED_WORK(&rmi4_data->rb_work, synaptics_rmi4_rebuild_work);
 
-	init_kthread_worker(&exp_data.touch_worker);
+	kthread_init_worker(&exp_data.touch_worker);
 	exp_data.touch_worker_thread = kthread_create(kthread_worker_fn,
 													&exp_data.touch_worker,
 													"touch_worker_thread");
@@ -4394,10 +4394,10 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 	}
 	sched_setscheduler(exp_data.touch_worker_thread, SCHED_FIFO, &param);
 	wake_up_process(exp_data.touch_worker_thread);
-	init_kthread_work(&exp_data.touch_work, synaptics_rmi4_exp_fn_work);
+	kthread_init_work(&exp_data.touch_work, synaptics_rmi4_exp_fn_work);
 	exp_data.rmi4_data = rmi4_data;
 	exp_data.queue_work = true;
-	queue_kthread_work(&exp_data.touch_worker,
+	kthread_queue_work(&exp_data.touch_worker,
 						&exp_data.touch_work);
 
 #ifdef FB_READY_RESET
