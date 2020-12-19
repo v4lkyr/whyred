@@ -101,14 +101,18 @@ static int tas2557_codec_suspend(struct snd_soc_codec *pCodec)
 static int tas2557_codec_resume(struct snd_soc_codec *pCodec)
 {
 	struct tas2557_priv *pTAS2557 = snd_soc_codec_get_drvdata(pCodec);
-	int ret = 0;
+	int ret;
 
 	mutex_lock(&pTAS2557->codec_lock);
 
 	dev_dbg(pTAS2557->dev, "%s\n", __func__);
-	pTAS2557->runtime_resume(pTAS2557);
+	if (pTAS2557->runtime_resume)
+		ret = pTAS2557->runtime_resume(pTAS2557);
+	else
+		ret = 0;	
 
 	mutex_unlock(&pTAS2557->codec_lock);
+
 	return ret;
 }
 
