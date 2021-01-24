@@ -1029,6 +1029,7 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
 
 	if (unlikely(f2fs_cp_error(sbi)))
 		return -EIO;
+
 	err = f2fs_is_checkpoint_ready(sbi);
 	if (err)
 		return err;
