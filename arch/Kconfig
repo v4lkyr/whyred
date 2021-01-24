@@ -484,6 +484,9 @@ choice
 config LTO_NONE
 	bool "None"
 
+config LTO_GCC
+	bool "Use GCC Link Time Optimization (LTO)"
+
 config LTO_CLANG
 	bool "Use clang Link Time Optimization (LTO) (EXPERIMENTAL)"
 	depends on ARCH_SUPPORTS_LTO_CLANG
