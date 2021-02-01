@@ -830,9 +830,6 @@ void __noreturn do_exit(long code)
 	}
 
 	exit_signals(tsk);  /* sets PF_EXITING */
-#ifdef CONFIG_SCHED_WALT
-	sched_exit(tsk);
-#endif
 
 	/* sync mm's RSS info before statistics gathering */
 	if (tsk->mm)
