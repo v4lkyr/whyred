@@ -27,6 +27,8 @@
 #include <linux/tick.h>
 #include <linux/irq.h>
 #include <linux/smpboot.h>
+
+#include <uapi/linux/sched/types.h>
 #include <trace/events/power.h>
 
 #include <trace/events/sched.h>
