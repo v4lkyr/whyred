@@ -50,6 +50,7 @@
 #include <linux/uaccess.h>
 #include <linux/uio_driver.h>
 #include <linux/io.h>
+#include <uapi/linux/sched/types.h>
 
 #include <asm/cacheflush.h>
 

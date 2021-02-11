@@ -26,7 +26,6 @@
 #include <linux/of_irq.h>
 #include <linux/platform_device.h>
 #include <linux/printk.h>
-#include <linux/sched.h>
 #include <linux/seq_file.h>
 #include <linux/sizes.h>
 #include <linux/slab.h>
@@ -34,6 +33,7 @@
 #include <linux/srcu.h>
 #include <linux/wait.h>
 #include <linux/cpumask.h>
+#include <uapi/linux/sched/types.h>
 #include <soc/qcom/smem.h>
 #include <soc/qcom/tracer_pkt.h>
 #include "glink_core_if.h"

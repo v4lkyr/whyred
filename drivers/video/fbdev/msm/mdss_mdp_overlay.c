@@ -27,6 +27,7 @@
 #include <linux/sort.h>
 #include <linux/kmemleak.h>
 #include <linux/sched/clock.h>
+#include <uapi/linux/sched/types.h>
 
 #include <sw_sync.h>
 

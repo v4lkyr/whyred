@@ -27,6 +27,7 @@
 #include <linux/msm-bus.h>
 #include <linux/dma-buf.h>
 #include <linux/string.h>
+#include <uapi/linux/sched/types.h>
 
 #include "mdss.h"
 #include "mdss_panel.h"

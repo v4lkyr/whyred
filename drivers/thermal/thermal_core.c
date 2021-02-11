@@ -37,6 +37,8 @@
 #include <linux/string.h>
 #include <linux/of.h>
 #include <linux/kthread.h>
+#include <uapi/linux/sched/types.h>
+
 #include <net/netlink.h>
 #include <net/genetlink.h>
 

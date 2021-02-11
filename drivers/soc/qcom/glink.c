@@ -18,12 +18,12 @@
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/of.h>
-#include <linux/sched.h>
 #include <linux/slab.h>
 #include <linux/types.h>
 #include <linux/workqueue.h>
 #include <linux/rwsem.h>
 #include <linux/pm_qos.h>
+#include <uapi/linux/sched/types.h>
 #include <soc/qcom/glink.h>
 #include <soc/qcom/tracer_pkt.h>
 #include "glink_core_if.h"

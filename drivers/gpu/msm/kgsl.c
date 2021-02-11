@@ -30,6 +30,7 @@
 #include <linux/security.h>
 #include <linux/compat.h>
 #include <linux/ctype.h>
+#include <uapi/linux/sched/types.h>
 
 #include "kgsl.h"
 #include "kgsl_debugfs.h"

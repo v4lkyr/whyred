@@ -47,6 +47,7 @@
 #include "../lct_tp_gesture.h"
 #include <linux/kthread.h>
 #include <linux/sched/rt.h>
+#include <uapi/linux/sched/types.h>
 
 #define INPUT_PHYS_NAME "synaptics_dsx/touch_input"
 #define STYLUS_PHYS_NAME "synaptics_dsx/stylus"

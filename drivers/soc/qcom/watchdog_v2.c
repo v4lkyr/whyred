@@ -27,6 +27,7 @@
 #include <linux/cpu_pm.h>
 #include <linux/platform_device.h>
 #include <linux/wait.h>
+#include <uapi/linux/sched/types.h>
 #include <soc/qcom/scm.h>
 #include <soc/qcom/memory_dump.h>
 #include <soc/qcom/minidump.h>

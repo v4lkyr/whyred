@@ -25,6 +25,7 @@
 #include <linux/msm-bus-board.h>
 #include <linux/regulator/consumer.h>
 #include <linux/dma-direction.h>
+#include <uapi/linux/sched/types.h>
 #include <soc/qcom/scm.h>
 #include <soc/qcom/rpm-smd.h>
 #include <soc/qcom/secure_buffer.h>
