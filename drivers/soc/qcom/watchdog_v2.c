@@ -18,7 +18,7 @@
 #include <linux/jiffies.h>
 #include <linux/kthread.h>
 #include <linux/mutex.h>
-#include <linux/sched.h>
+#include <linux/sched/clock.h>
 #include <linux/interrupt.h>
 #include <linux/irq.h>
 #include <linux/percpu.h>

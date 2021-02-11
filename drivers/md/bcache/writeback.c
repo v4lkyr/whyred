@@ -14,6 +14,7 @@
 #include <linux/delay.h>
 #include <linux/freezer.h>
 #include <linux/kthread.h>
+#include <linux/sched/clock.h>
 #include <trace/events/bcache.h>
 
 /* Rate limiting */

@@ -46,6 +46,7 @@
 #include <linux/utsname.h>
 #include <linux/ctype.h>
 #include <linux/uio.h>
+#include <linux/sched/clock.h>
 
 #include <asm/uaccess.h>
 

@@ -26,6 +26,8 @@
 #include <linux/memblock.h>
 #include <linux/sort.h>
 #include <linux/kmemleak.h>
+#include <linux/sched/clock.h>
+
 #include <sw_sync.h>
 
 #include <soc/qcom/event_timer.h>

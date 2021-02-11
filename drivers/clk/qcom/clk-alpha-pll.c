@@ -16,7 +16,7 @@
 #include <linux/clk-provider.h>
 #include <linux/regmap.h>
 #include <linux/delay.h>
-#include <linux/sched.h>
+#include <linux/sched/clock.h>
 
 #include "clk-alpha-pll.h"
 #include "common.h"

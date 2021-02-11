@@ -26,6 +26,7 @@
 #include <linux/seq_file.h>
 #include <linux/delay.h>
 #include <linux/uaccess.h>
+#include <linux/sched/clock.h>
 
 #include <linux/usb/ch9.h>
 
