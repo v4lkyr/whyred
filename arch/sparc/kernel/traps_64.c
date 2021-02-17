@@ -9,7 +9,7 @@
  */
 
 #include <linux/module.h>
-#include <linux/sched.h>
+#include <linux/sched/mm.h>
 #include <linux/sched/debug.h>
 #include <linux/linkage.h>
 #include <linux/kernel.h>

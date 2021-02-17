@@ -25,7 +25,7 @@
 #include <linux/seq_file.h>
 #include <linux/vmalloc.h>
 #include <linux/slab.h>
-#include <linux/sched.h>
+#include <linux/sched/mm.h>
 #include <linux/list_lru.h>
 #include <linux/ratelimit.h>
 #include <asm/cacheflush.h>

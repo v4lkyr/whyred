@@ -22,7 +22,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/mm.h>
-#include <linux/sched.h>
+#include <linux/sched/mm.h>
 #include <linux/sched/debug.h>
 #include <linux/smp.h>
 #include <linux/spinlock.h>
