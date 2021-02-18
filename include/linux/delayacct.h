@@ -17,7 +17,7 @@
 #ifndef _LINUX_DELAYACCT_H
 #define _LINUX_DELAYACCT_H
 
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/slab.h>
 
 /*
