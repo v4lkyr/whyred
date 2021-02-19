@@ -42,6 +42,7 @@
 #include <linux/debugfs.h>
 #include <linux/inetdevice.h>
 #include <linux/ip.h>
+#include <linux/sched/nohz.h>
 #include <wlan_hdd_softap_tx_rx.h>
 #include <ol_txrx_osif_api.h>
 #include <ol_txrx.h>
