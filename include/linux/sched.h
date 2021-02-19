@@ -1989,37 +1989,6 @@ static inline int test_tsk_need_resched(struct task_struct *tsk)
 	return unlikely(test_tsk_thread_flag(tsk,TIF_NEED_RESCHED));
 }
 
-static inline int restart_syscall(void)
-{
-	set_tsk_thread_flag(current, TIF_SIGPENDING);
-	return -ERESTARTNOINTR;
-}
-
-static inline int signal_pending(struct task_struct *p)
-{
-	return unlikely(test_tsk_thread_flag(p,TIF_SIGPENDING));
-}
-
-static inline int __fatal_signal_pending(struct task_struct *p)
-{
-	return unlikely(sigismember(&p->pending.signal, SIGKILL));
-}
-
-static inline int fatal_signal_pending(struct task_struct *p)
-{
-	return signal_pending(p) && __fatal_signal_pending(p);
-}
-
-static inline int signal_pending_state(long state, struct task_struct *p)
-{
-	if (!(state & (TASK_INTERRUPTIBLE | TASK_WAKEKILL)))
-		return 0;
-	if (!signal_pending(p))
-		return 0;
-
-	return (state & TASK_INTERRUPTIBLE) || __fatal_signal_pending(p);
-}
-
 /*
  * cond_resched() and cond_resched_lock(): latency reduction via
  * explicit rescheduling in places that are safe. The return
@@ -2095,26 +2064,6 @@ static inline void thread_group_cputime_t(struct task_struct *tsk,
 	cputime->utime = nsecs_to_cputime(times.utime);
 	cputime->stime = nsecs_to_cputime(times.stime);
 	cputime->sum_exec_runtime = times.sum_exec_runtime;
-}
-
-/*
- * Reevaluate whether the task has signals pending delivery.
- * Wake the task if so.
- * This is required every time the blocked sigset_t changes.
- * callers must hold sighand->siglock.
- */
-extern void recalc_sigpending_and_wake(struct task_struct *t);
-extern void recalc_sigpending(void);
-
-extern void signal_wake_up_state(struct task_struct *t, unsigned int state);
-
-static inline void signal_wake_up(struct task_struct *t, bool resume)
-{
-	signal_wake_up_state(t, resume ? TASK_WAKEKILL : 0);
-}
-static inline void ptrace_signal_wake_up(struct task_struct *t, bool resume)
-{
-	signal_wake_up_state(t, resume ? __TASK_TRACED : 0);
 }
 
 /*

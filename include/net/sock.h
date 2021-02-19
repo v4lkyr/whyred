@@ -57,7 +57,7 @@
 #include <linux/page_counter.h>
 #include <linux/memcontrol.h>
 #include <linux/static_key.h>
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 
 #include <linux/filter.h>
 #include <linux/rculist_nulls.h>

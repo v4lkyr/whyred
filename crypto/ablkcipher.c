@@ -18,7 +18,7 @@
 #include <linux/err.h>
 #include <linux/kernel.h>
 #include <linux/rtnetlink.h>
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/slab.h>
 #include <linux/seq_file.h>
 #include <linux/cryptouser.h>

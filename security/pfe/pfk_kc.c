@@ -32,7 +32,7 @@
 #include <linux/jiffies.h>
 #include <linux/slab.h>
 #include <linux/printk.h>
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 
 #include "pfk_kc.h"
 #include "pfk_ice.h"
