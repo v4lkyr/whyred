@@ -17,6 +17,8 @@
 #ifndef _LINUX_DELAYACCT_H
 #define _LINUX_DELAYACCT_H
 
+#include <linux/sched/signal.h>
+
 /*
  * Per-task flags relevant to delay accounting
  * maintained privately to avoid exhausting similar flags in sched.h:PF_*

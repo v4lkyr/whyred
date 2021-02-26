@@ -2,6 +2,7 @@
 #define _LINUX_KASAN_H
 
 #include <linux/types.h>
+#include <linux/sched/signal.h>
 
 struct kmem_cache;
 struct page;
