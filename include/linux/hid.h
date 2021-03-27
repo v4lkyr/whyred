@@ -346,6 +346,12 @@ struct hid_item {
 #define HID_GROUP_STEAM				0x0103
 
 /*
+ * HID protocol status
+ */
+#define HID_REPORT_PROTOCOL	1
+#define HID_BOOT_PROTOCOL	0
+
+/*
  * This is the global environment of the parser. This information is
  * persistent for main-items. The global environment can be saved and
  * restored with PUSH/POP statements.
@@ -379,6 +385,7 @@ struct hid_local {
 	unsigned usage_minimum;
 	unsigned delimiter_depth;
 	unsigned delimiter_branch;
+	unsigned int usage_page_preceding;
 };
 
 /*
