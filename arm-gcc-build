@@ -1,0 +1,7 @@
+time (make O=out clean && \
+make O=out \
+ARCH=arm64 \
+SUBARCH=arm64 \
+CROSS_COMPILE=/home/v4lkyr/android/tools/toolchains/arm-gcc/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu- \
+CROSS_COMPILE_ARM32=/home/v4lkyr/android/tools/toolchains/arm-gcc/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf- \
+-j$(nproc --all) $1 $2)
