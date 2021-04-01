@@ -334,12 +334,6 @@ static int synaptics_rmi4_i2c_read(struct synaptics_rmi4_data *rmi4_data,
 	int retval;
 	unsigned char retry;
 	unsigned char buf;
-#ifdef I2C_BURST_LIMIT
-	unsigned int ii;
-	unsigned int rd_msgs = ((length - 1) / I2C_BURST_LIMIT) + 1;
-#else
-	unsigned int rd_msgs = 1;
-#endif
 	unsigned char index = 0;
 	unsigned char xfer_msgs;
 	unsigned char remaining_msgs;
@@ -348,7 +342,20 @@ static int synaptics_rmi4_i2c_read(struct synaptics_rmi4_data *rmi4_data,
 	unsigned int remaining_length = length;
 	struct i2c_client *i2c = to_i2c_client(rmi4_data->pdev->dev.parent);
 	struct i2c_adapter *adap = i2c->adapter;
+#ifdef I2C_BURST_LIMIT
+	unsigned int ii;
+	unsigned int *rd_msgs;
+	rd_msgs = kcalloc(((length - 1) / I2C_BURST_LIMIT) + 1, sizeof(unsigned int), GFP_KERNEL);
+	if (!rd_msgs) {
+		retval = -ENOMEM;
+		goto exit;
+	}
 	struct i2c_msg msg[rd_msgs + 1];
+	kfree(rd_msgs);
+#else
+	unsigned int rd_msgs = 1;
+	struct i2c_msg msg[2];
+#endif
 
 	mutex_lock(&rmi4_data->rmi4_io_ctrl_mutex);
 
