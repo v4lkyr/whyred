@@ -3673,13 +3673,21 @@ irqreturn_t wcd9xxx_dce_handler(int irq, void *data)
 	struct wcd9xxx_mbhc *mbhc = data;
 	const struct wcd9xxx_mbhc_btn_detect_cfg *d =
 	    WCD9XXX_MBHC_CAL_BTN_DET_PTR(mbhc->mbhc_cfg->calibration);
-	short btnmeas[d->n_btn_meas + 1];
-	short dce[d->n_btn_meas + 1], sta;
-	s32 mv[d->n_btn_meas + 1], mv_s[d->n_btn_meas + 1];
+	short *btnmeas;
+	short *dce, sta;
+	s32 *mv, *mv_s;
 	struct snd_soc_codec *codec = mbhc->codec;
 	struct wcd9xxx_core_resource *core_res = mbhc->resmgr->core_res;
 	int n_btn_meas = d->n_btn_meas;
 	void *calibration = mbhc->mbhc_cfg->calibration;
+
+	btnmeas = kcalloc((d->n_btn_meas + 1), sizeof(short), GFP_KERNEL);
+	dce = kcalloc((d->n_btn_meas + 1), sizeof(short), GFP_KERNEL);
+	mv = kcalloc((d->n_btn_meas + 1), sizeof(s32), GFP_KERNEL);
+	mv_s = kcalloc((d->n_btn_meas + 1), sizeof(s32), GFP_KERNEL);
+
+	if (!btnmeas || !dce || !mv || !mv_s)
+		return -ENOMEM;
 
 	pr_debug("%s: enter\n", __func__);
 
@@ -3857,6 +3865,10 @@ irqreturn_t wcd9xxx_dce_handler(int irq, void *data)
 
  done:
 	pr_debug("%s: leave\n", __func__);
+	kfree(btnmeas);
+	kfree(dce);
+	kfree(mv);
+	kfree(mv_s);
 	mutex_unlock(&mbhc->mbhc_lock);
 	WCD9XXX_BCL_UNLOCK(mbhc->resmgr);
 	return IRQ_HANDLED;
@@ -4432,7 +4444,7 @@ ssize_t codec_mbhc_debug_read(struct file *file, char __user *buf,
 			      size_t count, loff_t *pos)
 {
 	const int size = 768;
-	char buffer[size];
+	char buffer[768];
 	int n = 0;
 	struct wcd9xxx_mbhc *mbhc = file->private_data;
 	const struct mbhc_internal_cal_data *p = &mbhc->mbhc_data;
