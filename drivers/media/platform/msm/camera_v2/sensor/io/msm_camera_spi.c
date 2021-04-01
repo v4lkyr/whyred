@@ -505,9 +505,14 @@ int32_t msm_camera_spi_write(struct msm_camera_i2c_client *client,
 		&client->spi_client->cmd_tbl.page_program;
 	uint8_t header_len = sizeof(pg->opcode) + pg->addr_len + pg->dummy_len;
 	uint16_t len = 0;
-	char buf[data_type];
+	char *buf;
 	char *tx;
 	int rc = -EINVAL;
+
+	buf = kcalloc(data_type, sizeof(int), GFP_KERNEL);
+	if (!buf)
+		return -ENOMEM;
+
 	if (((client->addr_type != MSM_CAMERA_I2C_BYTE_ADDR)
 		&& (client->addr_type != MSM_CAMERA_I2C_WORD_ADDR)
 		&& (client->addr_type != MSM_CAMERA_I2C_3B_ADDR))
@@ -533,11 +538,14 @@ int32_t msm_camera_spi_write(struct msm_camera_i2c_client *client,
 	goto OUT;
 NOMEM:
 	pr_err("%s: memory allocation failed\n", __func__);
+	kfree(buf);
 	return -ENOMEM;
 ERROR:
 	pr_err("%s: error write\n", __func__);
+	kfree(buf);
 OUT:
 	kfree(tx);
+	kfree(buf);
 	return rc;
 }
 int32_t msm_camera_spi_write_table(struct msm_camera_i2c_client *client,
