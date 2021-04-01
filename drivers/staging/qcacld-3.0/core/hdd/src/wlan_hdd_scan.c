@@ -2325,9 +2325,15 @@ static int __wlan_hdd_cfg80211_scan(struct wiphy *wiphy,
 	}
 
 	if (request->n_channels) {
-		char chList[(request->n_channels * 5) + 1];
+		char *chList;
 		int len;
 
+		chList = qdf_mem_malloc((request->n_channels * 5) + 1);
+		if (NULL == chList) {
+			hdd_err("chList malloc failed chList");
+			status = -ENOMEM;
+			goto free_mem;
+		}
 		channelList = qdf_mem_malloc(request->n_channels);
 		if (NULL == channelList) {
 			hdd_err("channelList malloc failed channelList");
@@ -3498,9 +3504,15 @@ static int __wlan_hdd_cfg80211_sched_scan_start(struct wiphy *wiphy,
 	/* Checking each channel against allowed channel list */
 	num_ch = 0;
 	if (request->n_channels) {
-		char chList[(request->n_channels * 5) + 1];
+		char *chList;
 		int len;
 
+		chList = qdf_mem_malloc((request->n_channels * 5) + 1);
+		if (NULL == chList) {
+			hdd_err("chList malloc failed chList");
+			ret = -ENOMEM;
+			goto error;
+		}
 		for (i = 0, len = 0; i < request->n_channels; i++) {
 			for (indx = 0; indx < num_channels_allowed; indx++) {
 				if (request->channels[i]->hw_value ==
