@@ -9,7 +9,7 @@
 #include <linux/mdss_io_util.h>
 
 #ifdef CONFIG_XIAOMI_WHYRED
-extern bool enable_gesture_mode;
+static bool enable_gesture_mode;
 extern bool synaptics_gesture_func_on;
 #endif
 
