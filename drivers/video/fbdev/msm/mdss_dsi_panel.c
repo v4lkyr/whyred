@@ -33,7 +33,7 @@ struct mdss_dsi_ctrl_pdata *ctrl_pdata_whitepoint;
 EXPORT_SYMBOL(g_lcd_id);
 
 #ifdef CONFIG_XIAOMI_WHYRED
-extern bool enable_gesture_mode;
+static bool enable_gesture_mode;
 extern bool synaptics_gesture_func_on;
 #endif
 
