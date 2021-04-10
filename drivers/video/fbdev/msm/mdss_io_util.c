@@ -9,8 +9,8 @@
 #include <linux/mdss_io_util.h>
 
 #ifdef CONFIG_XIAOMI_WHYRED
-extern bool enable_gesture_mode;
-extern bool synaptics_gesture_func_on;
+static bool enable_gesture_mode;
+static bool synaptics_gesture_func_on;
 #endif
 
 #define MAX_I2C_CMDS  16
