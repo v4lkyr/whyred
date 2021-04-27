@@ -6,7 +6,7 @@
 #include <linux/sched.h>
 #include <linux/spinlock.h>
 
-#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
+#define DEFAULT_RATELIMIT_INTERVAL	(10 * HZ)
 #define DEFAULT_RATELIMIT_BURST		10
 
 /* issue num suppressed message on exit */
