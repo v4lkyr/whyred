@@ -119,12 +119,12 @@ enum {
 	FORCE_INOV_DISABLE_BIT	= BIT(1),
 };
 
-static int debug_mask = 0xff;
+static int debug_mask = 0;
 
 #define pl_dbg(chip, reason, fmt, ...)				\
 	do {								\
 		if (debug_mask & (reason))				\
-			pr_info(fmt, ##__VA_ARGS__);	\
+			pr_debug(fmt, ##__VA_ARGS__);	\
 		else							\
 			pr_debug(fmt, ##__VA_ARGS__);		\
 	} while (0)
