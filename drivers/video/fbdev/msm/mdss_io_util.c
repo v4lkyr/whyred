@@ -266,11 +266,13 @@ int msm_dss_enable_vreg(struct dss_vreg *in_vreg, int num_vreg, int enable)
 		for (i = 0; i < num_vreg; i++) {
 #ifdef CONFIG_XIAOMI_WHYRED
 			/* vddio lab ibb continus supply */
-			if(enable_gesture_mode || synaptics_gesture_func_on) {
-				if( (strcmp(in_vreg[i].vreg_name,"lab")==0) ||
-						(strcmp(in_vreg[i].vreg_name,"ibb")==0) ||
-						(strcmp(in_vreg[i].vreg_name,"wqhd-vddio")==0) ) {
-					printk(KERN_ERR "[LCD][TP][Gesture][resume] '%s' power continus supply\n",in_vreg[i].vreg_name);
+			if (enable_gesture_mode || synaptics_gesture_func_on) {
+				if ((strcmp(in_vreg[i].vreg_name, "lab") == 0) ||
+					(strcmp(in_vreg[i].vreg_name, "ibb") == 0) ||
+					(strcmp(in_vreg[i].vreg_name, "wqhd-vddio") == 0)) {
+					pr_debug(KERN_ERR "[LCD][TP][Gesture][resume] \
+						'%s' power continuous supply\n",
+						in_vreg[i].vreg_name);
 					continue;
 				}
 			}
@@ -307,20 +309,24 @@ int msm_dss_enable_vreg(struct dss_vreg *in_vreg, int num_vreg, int enable)
 		}
 	} else {
 		for (i = num_vreg-1; i >= 0; i--) {
-			if(ESD_TE_status){
-				printk(KERN_ERR "panel esd check recovery \n");
-				if((strcmp(in_vreg[i].vreg_name,"wqhd-vddio")==0) ) {
-						printk(KERN_ERR "panel '%s' power continus supply\n",in_vreg[i].vreg_name);
-						continue;
+			if (ESD_TE_status) {
+				pr_debug(KERN_ERR "panel esd check recovery \n");
+				if ((strcmp(in_vreg[i].vreg_name, "wqhd-vddio") == 0)) {
+					pr_debug(KERN_ERR "panel '%s' \
+						power continuous supply\n",
+						in_vreg[i].vreg_name);
+					continue;
 				}
 			}
 #ifdef CONFIG_XIAOMI_WHYRED
 			/* vddio lab ibb continus supply */
-			if(enable_gesture_mode || synaptics_gesture_func_on) {
-				if( (strcmp(in_vreg[i].vreg_name,"lab")==0) ||
-						(strcmp(in_vreg[i].vreg_name,"ibb")==0) ||
-						(strcmp(in_vreg[i].vreg_name,"wqhd-vddio")==0) ) {
-					printk(KERN_ERR "[LCD][TP][Gesture][suspend] '%s' power continus supply\n",in_vreg[i].vreg_name);
+			if (enable_gesture_mode || synaptics_gesture_func_on) {
+				if ((strcmp(in_vreg[i].vreg_name, "lab") == 0) ||
+					(strcmp(in_vreg[i].vreg_name, "ibb") == 0) ||
+					(strcmp(in_vreg[i].vreg_name, "wqhd-vddio") == 0)) {
+					pr_debug(KERN_ERR "[LCD][TP][Gesture][suspend] \
+						'%s' power continuous supply\n",
+						in_vreg[i].vreg_name);
 					continue;
 				}
 			}
