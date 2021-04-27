@@ -4456,35 +4456,6 @@ exit:
 	pr_debug("exit\n");
 }
 
-static int mdss_dp_usbpd_setup(struct mdss_dp_drv_pdata *dp_drv)
-{
-	int ret = 0;
-	const char *pd_phandle = "qcom,dp-usbpd-detection";
-
-	dp_drv->pd = devm_usbpd_get_by_phandle(&dp_drv->pdev->dev,
-						    pd_phandle);
-
-	if (IS_ERR(dp_drv->pd)) {
-		pr_err("get_usbpd phandle failed (%ld)\n",
-				PTR_ERR(dp_drv->pd));
-		return PTR_ERR(dp_drv->pd);
-	}
-
-	dp_drv->svid_handler.svid = USB_C_DP_SID;
-	dp_drv->svid_handler.vdm_received = NULL;
-	dp_drv->svid_handler.connect = &usbpd_connect_callback;
-	dp_drv->svid_handler.svdm_received = &usbpd_response_callback;
-	dp_drv->svid_handler.disconnect = &usbpd_disconnect_callback;
-
-	ret = usbpd_register_svid(dp_drv->pd, &dp_drv->svid_handler);
-	if (ret) {
-		pr_err("usbpd registration failed\n");
-		return -ENODEV;
-	}
-
-	return ret;
-}
-
 static int mdss_dp_probe(struct platform_device *pdev)
 {
 	int ret, i;
@@ -4537,12 +4508,6 @@ static int mdss_dp_probe(struct platform_device *pdev)
 	init_completion(&dp_drv->idle_comp);
 	init_completion(&dp_drv->video_comp);
 	init_completion(&dp_drv->audio_comp);
-
-	if (mdss_dp_usbpd_setup(dp_drv)) {
-		pr_err("Error usbpd setup!\n");
-		dp_drv = NULL;
-		return -EPROBE_DEFER;
-	}
 
 	ret = mdss_retrieve_dp_ctrl_resources(pdev, dp_drv);
 	if (ret)
