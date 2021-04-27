@@ -761,10 +761,10 @@ static int fpc1020_probe(struct platform_device *pdev)
 		goto exit;
 	}
 
-	if(fpsensor != 1){
-                 pr_err("Macle fpc1020_probe failed as fpsensor=%d(1=fp)\n", fpsensor);
-                 return -1;
-         }
+	if (fpsensor != 1) {
+		pr_debug("Macle fpc1020_probe failed as fpsensor=%d(1=fp)\n", fpsensor);
+		return -1;
+	}
 
 	fpc1020->dev = dev;
 	platform_set_drvdata(pdev, fpc1020);
