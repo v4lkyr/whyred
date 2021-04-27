@@ -37,10 +37,6 @@
 				fsmgr_flags = "wait";
 				status = "ok";
 			};
-
-			vendor {
-				fsmgr_flags = "wait";
-			};
 		};
 	};
 };
