@@ -4394,7 +4394,7 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 #endif
 
 	rmi4_data->rb_workqueue =
-			create_singlethread_workqueue("dsx_rebuild_workqueue");
+			alloc_workqueue("dsx_rebuild_workqueue", WQ_HIGHPRI | WQ_UNBOUND, 0);
 	INIT_DELAYED_WORK(&rmi4_data->rb_work, synaptics_rmi4_rebuild_work);
 
 	kthread_init_worker(&exp_data.touch_worker);
@@ -4415,7 +4415,7 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 
 #ifdef FB_READY_RESET
 	rmi4_data->reset_workqueue =
-			create_singlethread_workqueue("dsx_reset_workqueue");
+			alloc_workqueue("dsx_reset_workqueue", WQ_HIGHPRI | WQ_UNBOUND, 0);
 	INIT_WORK(&rmi4_data->reset_work, synaptics_rmi4_reset_work);
 	queue_work(rmi4_data->reset_workqueue, &rmi4_data->reset_work);
 #endif
