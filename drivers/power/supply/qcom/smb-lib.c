@@ -3027,7 +3027,7 @@ int smblib_set_prop_pd_current_max(struct smb_charger *chg,
 }
 
 #if defined(CONFIG_XIAOMI_WHYRED)
-#define FLOAT_CURRENT_UA		500000
+#define FLOAT_CURRENT_UA		1000000
 #endif
 static int smblib_handle_usb_current(struct smb_charger *chg,
 					int usb_current)
@@ -4255,7 +4255,7 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		 * if this is a SDP and appropriately set the current
 		 */
 		#if defined (CONFIG_XIAOMI_WHYRED)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 500000);
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
 		#endif
 		break;
 	case POWER_SUPPLY_TYPE_USB_HVDCP:
