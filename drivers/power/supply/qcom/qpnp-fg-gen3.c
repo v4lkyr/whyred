@@ -1056,6 +1056,7 @@ static int fg_save_learned_cap_to_sram(struct fg_dev *fg)
 	if (fg->battery_missing || !chip->cl.learned_cc_uah)
 		return -EPERM;
 
+	chip->cl.learned_cc_uah = 4000000;
 	cc_mah = div64_s64(chip->cl.learned_cc_uah, 1000);
 	/* Write to a backup register to use across reboot */
 	rc = fg_sram_write(fg, fg->sp[FG_SRAM_ACT_BATT_CAP].addr_word,
@@ -1094,6 +1095,7 @@ static int fg_load_learned_cap_from_sram(struct fg_dev *fg)
 	}
 
 	chip->cl.learned_cc_uah = act_cap_mah * 1000;
+	chip->cl.learned_cc_uah = (chip->cl.learned_cc_uah > 4000000) ? chip->cl.learned_cc_uah : 4000000;
 
 	if (chip->cl.learned_cc_uah != chip->cl.nom_cap_uah) {
 		if (chip->cl.learned_cc_uah == 0)
