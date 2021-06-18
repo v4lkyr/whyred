@@ -488,6 +488,12 @@ config STACKPROTECTOR_STRONG
 config LTO
 	def_bool n
 
+config ARCH_SUPPORTS_LTO_GCC
+	bool
+	help
+	  An architecture should select this option if it supports:
+	  - compiling with GCC.
+
 config ARCH_SUPPORTS_LTO_CLANG
 	bool
 	help
@@ -516,6 +522,14 @@ choice
 
 config LTO_NONE
 	bool "None"
+
+config LTO_GCC
+	bool "Enable Link Time Optimization for GCC"
+	depends on ARCH_SUPPORTS_LTO_GCC
+	depends on CC_IS_GCC
+	help
+          This option enables GCC's Link Time Optimization (LTO), which allows
+          the compiler to optimize the kernel globally at link time.
 
 config LTO_CLANG
 	bool "Use clang Link Time Optimization (LTO) (EXPERIMENTAL)"
