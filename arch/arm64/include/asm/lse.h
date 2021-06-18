@@ -22,7 +22,7 @@
 
 #else	/* __ASSEMBLER__ */
 
-#ifdef CONFIG_LTO_CLANG
+#if defined(CONFIG_LTO_CLANG) || defined(CONFIG_LTO_GCC)
 #define __LSE_PREAMBLE	".arch_extension lse\n"
 #else
 __asm__(".arch_extension	lse");
