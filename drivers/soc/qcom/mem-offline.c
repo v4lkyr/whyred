@@ -299,7 +299,7 @@ static int mem_change_refresh_state(struct memory_notify *mn,
 
 	if (mem_sec_state[idx] == state) {
 		/* we shouldn't be getting this request */
-		pr_warn("mem-offline: state of mem%d block already in %s state. Ignoring refresh state change request\n",
+		pr_warn("mem-offline: state of mem%lx block already in %s state. Ignoring refresh state change request\n",
 				sec_nr, online ? "online" : "offline");
 		return 0;
 	}
