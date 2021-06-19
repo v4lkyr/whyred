@@ -135,7 +135,7 @@ static void __dump_packet(u8 *packet)
 	/* row must contain enough for 0xdeadbaad * 8 to be converted into
 	 * "de ad ba ab " * 8 + '\0'
 	 */
-	char row[3 * row_size];
+	char row[3 * 32];
 
 	for (c = 0; c * row_size < packet_size; ++c) {
 		int bytes_to_read = ((c + 1) * row_size > packet_size) ?
@@ -1537,7 +1537,7 @@ static int __iface_cmdq_write_relaxed(struct venus_hfi_device *device,
 
 	if (cmd_packet->packet_type == HFI_CMD_SESSION_EMPTY_BUFFER &&
 				!is_clock_bus_voted(device))
-		dprintk(VIDC_ERR, "%s: bus %llu bps or clock %lu MHz\n",
+		dprintk(VIDC_ERR, "%s: bus %lu bps or clock %u MHz\n",
 				__func__, device->bus_vote.total_bw_ddr,
 					device->clk_freq);
 
