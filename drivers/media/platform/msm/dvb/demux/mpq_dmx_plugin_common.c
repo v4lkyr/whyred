@@ -528,7 +528,11 @@ static ssize_t mpq_sdmx_log_level_write(struct file *fp,
 	if (level < SDMX_LOG_NO_PRINT || level > SDMX_LOG_VERBOSE)
 		return -EINVAL;
 
-	mutex_lock_interruptible(&mpq_demux->mutex);
+	if (!mutex_lock_interruptible(&mpq_demux->mutex)) {
+		pr_warn("Couldn't acquire mutex!\n");
+		return -EINTR;
+	}
+
 	mpq_demux->sdmx_log_level = level;
 	if (mpq_demux->sdmx_session_handle != SDMX_INVALID_SESSION_HANDLE) {
 		ret = sdmx_set_log_level(mpq_demux->sdmx_session_handle,
@@ -1101,7 +1105,10 @@ int mpq_dmx_reuse_decoder_buffer(struct dvb_demux_feed *feed, int cookie)
 		struct mpq_streambuffer *stream_buffer;
 		int ret;
 
-		mutex_lock_interruptible(&mpq_demux->mutex);
+		if (!mutex_lock_interruptible(&mpq_demux->mutex)) {
+			pr_warn("Couldn't acquire mutex!\n");
+			return -EINTR;
+		}
 		mpq_feed = feed->priv;
 		feed_data = &mpq_feed->video_info;
 
@@ -1318,7 +1325,7 @@ static int mpq_dmx_init_internal_buffers(
 
 	ret = mpq_sdmx_create_shm_bridge(dbuf->dmabuf, dbuf->sgt);
 	if (ret) {
-		MPQ_DVB_ERR_PRINT("%s mpq_sdmx_create_shm_bridge failed\n");
+		MPQ_DVB_ERR_PRINT("mpq_sdmx_create_shm_bridge failed\n");
 		return ret;
 	}
 
@@ -1824,7 +1831,7 @@ static int mpq_sdmx_alloc_data_buf(struct mpq_feed *mpq_feed, size_t size)
 
 	shminfo = vmalloc(sizeof(struct qtee_shm));
 	if (!shminfo) {
-		MPQ_DVB_ERR_PRINT("%s: shminfo alloc failed\n");
+		MPQ_DVB_ERR_PRINT("shminfo alloc failed\n");
 		return -ENOMEM;
 	}
 
@@ -1870,7 +1877,7 @@ static int mpq_sdmx_init_metadata_buffer(struct mpq_demux *mpq_demux,
 	shminfo = vmalloc(sizeof(struct qtee_shm));
 
 	if (!shminfo) {
-		MPQ_DVB_ERR_PRINT("%s: shminfo alloc failed\n");
+		MPQ_DVB_ERR_PRINT("shminfo alloc failed\n");
 		return -ENOMEM;
 	}
 	qtee_shmbridge_allocate_shm(SDMX_METADATA_BUFFER_SIZE, shminfo);
@@ -3715,7 +3722,7 @@ static int mpq_sdmx_get_buffer_chunks(struct mpq_demux *mpq_demux,
 
 	ret = mpq_sdmx_create_shm_bridge(buff_info->dmabuf, buff_info->sgt);
 	if (ret) {
-		MPQ_DVB_ERR_PRINT("%s mpq_sdmx_create_shm_bridge failed\n");
+		MPQ_DVB_ERR_PRINT("mpq_sdmx_create_shm_bridge failed\n");
 		return ret;
 	}
 
@@ -3742,7 +3749,7 @@ static int mpq_sdmx_init_data_buffer(struct mpq_demux *mpq_demux,
 			*buf_mode = SDMX_LINEAR_GROUP_BUF;
 		*num_buffers = feed_data->buffer_desc.decoder_buffers_num;
 
-		MPQ_DVB_ERR_PRINT("%s: video feed case no of buffers=%zu\n",
+		MPQ_DVB_ERR_PRINT("%s: video feed case no of buffers=%u\n",
 				  __func__, *num_buffers);
 
 		for (i = 0; i < *num_buffers; i++) {

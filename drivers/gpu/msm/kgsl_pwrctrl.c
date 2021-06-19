@@ -405,10 +405,9 @@ static int kgsl_pwrctrl_cx_ipeak_init(struct kgsl_device *device)
 
 	for_each_child_of_node(node, child) {
 		if (i >= ARRAY_SIZE(pwr->gpu_ipeak_client)) {
-			dev_err(device->dev,
-				"dt: too many CX ipeak clients defined\n",
-					i);
 			ret = -EINVAL;
+			dev_err(device->dev,
+				"dt: too many CX ipeak clients%d defined\n", i);
 			of_node_put(child);
 			goto error;
 		}
