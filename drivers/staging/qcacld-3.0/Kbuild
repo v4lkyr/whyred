@@ -2710,7 +2710,8 @@ ccflags-y += -DHIF_CE_HISTORY_MAX=$(CONFIG_HIF_LARGE_CE_RING_HISTORY)
 endif
 #endof dummy flags
 
-ccflags-$(CONFIG_ENABLE_SIZE_OPTIMIZE) += -Os
+ccflags-y += $(call cc-option, -g0)
+ccflags-y += $(call cc-option, -Os)
 
 # DFS component
 cppflags-$(CONFIG_WLAN_DFS_STATIC_MEM_ALLOC) += -DWLAN_DFS_STATIC_MEM_ALLOC
