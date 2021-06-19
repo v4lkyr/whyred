@@ -345,7 +345,10 @@ static inline unsigned int walt_nr_rtg_high_prio(int cpu)
 
 extern bool is_rtgb_active(void);
 extern u64 get_rtgb_active_time(void);
-#define SCHED_PRINT(arg)        printk_deferred("%s=%llu", #arg, arg)
+#define SCHED_PRINT(arg)        printk_deferred("%s=%d", #arg, arg)
+#define SCHED_PRINT_UINT(arg)        printk_deferred("%s=%u", #arg, arg)
+#define SCHED_PRINT_LUINT(arg)        printk_deferred("%s=%lu", #arg, arg)
+#define SCHED_PRINT_LLUINT(arg)        printk_deferred("%s=%llu", #arg, arg)
 #define STRG(arg)               #arg
 
 static inline void walt_task_dump(struct task_struct *p)
@@ -355,11 +358,11 @@ static inline void walt_task_dump(struct task_struct *p)
 	int buffsz = NR_CPUS * 16;
 
 	SCHED_PRINT(p->pid);
-	SCHED_PRINT(p->ravg.mark_start);
-	SCHED_PRINT(p->ravg.demand);
-	SCHED_PRINT(p->ravg.coloc_demand);
-	SCHED_PRINT(sched_ravg_window);
-	SCHED_PRINT(new_sched_ravg_window);
+	SCHED_PRINT_LLUINT(p->ravg.mark_start);
+	SCHED_PRINT_UINT(p->ravg.demand);
+	SCHED_PRINT_UINT(p->ravg.coloc_demand);
+	SCHED_PRINT_UINT(sched_ravg_window);
+	SCHED_PRINT_UINT(new_sched_ravg_window);
 
 	for (i = 0 ; i < nr_cpu_ids; i++)
 		j += scnprintf(buff + j, buffsz - j, "%u ",
@@ -373,8 +376,8 @@ static inline void walt_task_dump(struct task_struct *p)
 	printk_deferred("%s=%d (%s)\n", STRG(p->ravg.prev_window),
 			p->ravg.prev_window, buff);
 
-	SCHED_PRINT(p->last_wake_ts);
-	SCHED_PRINT(p->last_enqueued_ts);
+	SCHED_PRINT_LLUINT(p->last_wake_ts);
+	SCHED_PRINT_LLUINT(p->last_enqueued_ts);
 	SCHED_PRINT(p->misfit);
 	SCHED_PRINT(p->unfilter);
 }
@@ -398,18 +401,18 @@ static inline void walt_rq_dump(int cpu)
 			cpu, rq->nr_running, tsk->pid, tsk->comm);
 
 	printk_deferred("==========================================");
-	SCHED_PRINT(rq->window_start);
-	SCHED_PRINT(rq->prev_window_size);
-	SCHED_PRINT(rq->curr_runnable_sum);
-	SCHED_PRINT(rq->prev_runnable_sum);
-	SCHED_PRINT(rq->nt_curr_runnable_sum);
-	SCHED_PRINT(rq->nt_prev_runnable_sum);
-	SCHED_PRINT(rq->cum_window_demand_scaled);
-	SCHED_PRINT(rq->task_exec_scale);
-	SCHED_PRINT(rq->grp_time.curr_runnable_sum);
-	SCHED_PRINT(rq->grp_time.prev_runnable_sum);
-	SCHED_PRINT(rq->grp_time.nt_curr_runnable_sum);
-	SCHED_PRINT(rq->grp_time.nt_prev_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->window_start);
+	SCHED_PRINT_UINT(rq->prev_window_size);
+	SCHED_PRINT_LLUINT(rq->curr_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->prev_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->nt_curr_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->nt_prev_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->cum_window_demand_scaled);
+	SCHED_PRINT_LLUINT(rq->task_exec_scale);
+	SCHED_PRINT_LLUINT(rq->grp_time.curr_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->grp_time.prev_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->grp_time.nt_curr_runnable_sum);
+	SCHED_PRINT_LLUINT(rq->grp_time.nt_prev_runnable_sum);
 	for (i = 0 ; i < NUM_TRACKED_WINDOWS; i++) {
 		printk_deferred("rq->load_subs[%d].window_start=%llu)\n", i,
 				rq->load_subs[i].window_start);
@@ -430,7 +433,7 @@ static inline void walt_dump(void)
 
 	printk_deferred("============ WALT RQ DUMP START ==============\n");
 	printk_deferred("Sched ktime_get: %llu\n", sched_ktime_clock());
-	printk_deferred("Time last window changed=%lu\n",
+	printk_deferred("Time last window changed=%llu\n",
 			sched_ravg_window_change_time);
 	for_each_online_cpu(cpu) {
 		walt_rq_dump(cpu);
@@ -441,7 +444,7 @@ static inline void walt_dump(void)
 	printk_deferred("============ WALT RQ DUMP END ==============\n");
 }
 
-static int in_sched_bug;
+static int __maybe_unused in_sched_bug;
 #define SCHED_BUG_ON(condition)				\
 ({							\
 	if (unlikely(!!(condition)) && !in_sched_bug) {	\
