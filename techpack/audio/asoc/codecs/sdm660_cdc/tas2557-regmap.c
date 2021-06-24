@@ -420,18 +420,18 @@ static void irq_work_routine(struct work_struct *work)
 #endif
 
 	if (pTAS2557->mbRuntimeSuspend) {
-		dev_info(pTAS2557->dev, "%s, Runtime Suspended\n", __func__);
+		dev_vdbg(pTAS2557->dev, "%s, Runtime Suspended\n", __func__);
 		goto end;
 	}
 
 	if (!pTAS2557->mbPowerUp) {
-		dev_info(pTAS2557->dev, "%s, device not powered\n", __func__);
+		dev_vdbg(pTAS2557->dev, "%s, device not powered\n", __func__);
 		goto end;
 	}
 
 	if ((!pTAS2557->mpFirmware->mnConfigurations)
 		|| (!pTAS2557->mpFirmware->mnPrograms)) {
-		dev_info(pTAS2557->dev, "%s, firmware not loaded\n", __func__);
+		dev_vdbg(pTAS2557->dev, "%s, firmware not loaded\n", __func__);
 		goto end;
 	}
 	nResult = tas2557_dev_write(pTAS2557, TAS2557_GPIO4_PIN_REG, 0x00);
@@ -496,7 +496,7 @@ static void irq_work_routine(struct work_struct *work)
 
 		goto program;
 	} else {
-		dev_dbg(pTAS2557->dev, "IRQ Status: 0x%x, 0x%x\n", nDevInt1Status, nDevInt2Status);
+		dev_vdbg(pTAS2557->dev, "IRQ Status: 0x%x, 0x%x\n", nDevInt1Status, nDevInt2Status);
 		nCounter = 2;
 		while (nCounter > 0) {
 			nResult = tas2557_dev_read(pTAS2557, TAS2557_POWER_UP_FLAG_REG, &nDevPowerUpFlag);
@@ -524,7 +524,7 @@ static void irq_work_routine(struct work_struct *work)
 		}
 		pTAS2557->mnErrCode &= ~ERROR_CLASSD_PWR;
 
-		dev_dbg(pTAS2557->dev, "%s: INT1=0x%x, INT2=0x%x; PowerUpFlag=0x%x\n",
+		dev_vdbg(pTAS2557->dev, "%s: INT1=0x%x, INT2=0x%x; PowerUpFlag=0x%x\n",
 			__func__, nDevInt1Status, nDevInt2Status, nDevPowerUpFlag);
 		goto end;
 	}
@@ -608,7 +608,7 @@ static void timer_work_routine(struct work_struct *work)
 	nResult = tas2557_get_die_temperature(pTAS2557, &nTemp);
 	if (nResult >= 0) {
 		nActTemp = (int)(nTemp >> 23);
-		dev_dbg(pTAS2557->dev, "Die=0x%x, degree=%d\n", nTemp, nActTemp);
+		dev_vdbg(pTAS2557->dev, "Die=0x%x, degree=%d\n", nTemp, nActTemp);
 		if (!pTAS2557->mnDieTvReadCounter)
 			nAvg = 0;
 		pTAS2557->mnDieTvReadCounter++;
@@ -656,7 +656,7 @@ end:
 
 static int tas2557_runtime_suspend(struct tas2557_priv *pTAS2557)
 {
-	dev_dbg(pTAS2557->dev, "%s\n", __func__);
+	dev_vdbg(pTAS2557->dev, "%s\n", __func__);
 
 	pTAS2557->mbRuntimeSuspend = true;
 
@@ -682,7 +682,7 @@ static int tas2557_runtime_resume(struct tas2557_priv *pTAS2557)
 {
 	struct TProgram *pProgram;
 
-	dev_dbg(pTAS2557->dev, "%s\n", __func__);
+	dev_vdbg(pTAS2557->dev, "%s\n", __func__);
 	if (!pTAS2557->mpFirmware->mpPrograms) {
 		dev_dbg(pTAS2557->dev, "%s, firmware not loaded\n", __func__);
 		goto end;
