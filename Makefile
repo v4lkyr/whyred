@@ -694,7 +694,29 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS   += -Os
 else
-KBUILD_CFLAGS   += -O2
+ifeq ($(cc-name), gcc)
+KBUILD_AFLAGS	+= -O3 -march=armv8-a+crc+crypto -mcpu=cortex-a73.cortex-a53
+KBUILD_CFLAGS	+= -O3 -march=armv8-a+crc+crypto -mcpu=cortex-a73.cortex-a53
+endif
+ifeq ($(cc-name), clang)
+POLLY_FLAGS :=	-mllvm -polly \
+				-mllvm -polly-run-dce \
+				-mllvm -polly-postopts=1 \
+				-mllvm -polly-run-inliner \
+				-mllvm -polly-reschedule=1 \
+				-mllvm -polly-num-threads=0 \
+				-mllvm -polly-ast-use-context \
+				-mllvm -polly-omp-backend=LLVM \
+				-mllvm -polly-detect-keep-going \
+				-mllvm -polly-scheduling=dynamic \
+				-mllvm -polly-loopfusion-greedy=1 \
+				-mllvm -polly-vectorizer=stripmine \
+				-mllvm -polly-scheduling-chunksize=1 \
+				-mllvm -polly-invariant-load-hoisting
+KBUILD_AFLAGS  += -O3 -march=armv8-a+crc+crypto -mcpu=kryo $(POLLY_FLAGS)
+KBUILD_CFLAGS  += -O3 -march=armv8-a+crc+crypto -mcpu=kryo $(POLLY_FLAGS)
+KBUILD_LDFLAGS += --lto-O3 $(POLLY_FLAGS)
+endif
 endif
 
 ifdef CONFIG_CC_WERROR
