@@ -690,7 +690,15 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS   += -Os
 else
-KBUILD_CFLAGS   += -O2
+ifeq ($(cc-name), gcc)
+KBUILD_AFLAGS	+= -O3 -march=armv8-a+crc+crypto -mcpu=cortex-a73.cortex-a53
+KBUILD_CFLAGS	+= -O3 -march=armv8-a+crc+crypto -mcpu=cortex-a73.cortex-a53
+endif
+ifeq ($(cc-name), clang)
+KBUILD_AFLAGS	+= -O3 -march=armv8-a+crc+crypto -mcpu=kryo
+KBUILD_CFLAGS	+= -O3 -march=armv8-a+crc+crypto -mcpu=kryo
+KBUILD_LDFLAGS	+= --lto-O2
+endif
 endif
 
 ifdef CONFIG_CC_WERROR
