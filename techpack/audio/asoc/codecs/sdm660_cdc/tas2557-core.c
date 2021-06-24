@@ -444,7 +444,7 @@ int tas2557_enable(struct tas2557_priv *pTAS2557, bool bEnable)
 	unsigned int nValue;
 	struct TProgram *pProgram;
 
-	dev_dbg(pTAS2557->dev, "Enable: %d\n", bEnable);
+	dev_vdbg(pTAS2557->dev, "Enable: %d\n", bEnable);
 
 	if ((pTAS2557->mpFirmware->mnPrograms == 0)
 		|| (pTAS2557->mpFirmware->mnConfigurations == 0)) {
@@ -475,7 +475,7 @@ int tas2557_enable(struct tas2557_priv *pTAS2557, bool bEnable)
 
 			pTAS2557->clearIRQ(pTAS2557);
 			/* power on device */
-			dev_dbg(pTAS2557->dev, "Enable: load startup sequence\n");
+			dev_vdbg(pTAS2557->dev, "Enable: load startup sequence\n");
 			nResult = tas2557_dev_load_data(pTAS2557, p_tas2557_startup_data);
 			if (nResult < 0)
 				goto end;
@@ -486,7 +486,7 @@ int tas2557_enable(struct tas2557_priv *pTAS2557, bool bEnable)
 					goto end;
 				}
 			}
-			dev_dbg(pTAS2557->dev, "Enable: load unmute sequence\n");
+			dev_vdbg(pTAS2557->dev, "Enable: load unmute sequence\n");
 			nResult = tas2557_dev_load_data(pTAS2557, p_tas2557_unmute_data);
 			if (nResult < 0)
 				goto end;
@@ -507,7 +507,7 @@ int tas2557_enable(struct tas2557_priv *pTAS2557, bool bEnable)
 			if (hrtimer_active(&pTAS2557->mtimer))
 				hrtimer_cancel(&pTAS2557->mtimer);
 
-			dev_dbg(pTAS2557->dev, "Enable: load shutdown sequence\n");
+			dev_vdbg(pTAS2557->dev, "Enable: load shutdown sequence\n");
 			if (pProgram->mnAppMode == TAS2557_APP_TUNINGMODE) {
 				/* turn off IRQ */
 				pTAS2557->enableIRQ(pTAS2557, false, false);
@@ -537,7 +537,7 @@ int tas2557_set_sampling_rate(struct tas2557_priv *pTAS2557, unsigned int nSampl
 	struct TConfiguration *pConfiguration;
 	unsigned int nConfiguration;
 
-	dev_dbg(pTAS2557->dev, "tas2557_setup_clocks: nSamplingRate = %d [Hz]\n",
+	dev_vdbg(pTAS2557->dev, "tas2557_setup_clocks: nSamplingRate = %d [Hz]\n",
 		nSamplingRate);
 
 	if ((!pTAS2557->mpFirmware->mpPrograms) ||
@@ -549,7 +549,7 @@ int tas2557_set_sampling_rate(struct tas2557_priv *pTAS2557, unsigned int nSampl
 
 	pConfiguration = &(pTAS2557->mpFirmware->mpConfigurations[pTAS2557->mnCurrentConfiguration]);
 	if (pConfiguration->mnSamplingRate == nSamplingRate) {
-		dev_info(pTAS2557->dev, "Sampling rate for current configuration matches: %d\n",
+		dev_vdbg(pTAS2557->dev, "Sampling rate for current configuration matches: %d\n",
 			nSamplingRate);
 		nResult = 0;
 		goto end;
@@ -1842,7 +1842,7 @@ int tas2557_set_program(struct tas2557_priv *pTAS2557,
 
 	if (pTAS2557->mbPowerUp) {
 		pTAS2557->clearIRQ(pTAS2557);
-		dev_dbg(pTAS2557->dev, "device powered up, load startup\n");
+		dev_vdbg(pTAS2557->dev, "device powered up, load startup\n");
 		nResult = tas2557_dev_load_data(pTAS2557, p_tas2557_startup_data);
 		if (nResult < 0)
 			goto end;
@@ -1854,7 +1854,7 @@ int tas2557_set_program(struct tas2557_priv *pTAS2557,
 				goto end;
 			}
 		}
-		dev_dbg(pTAS2557->dev, "device powered up, load unmute\n");
+		dev_vdbg(pTAS2557->dev, "device powered up, load unmute\n");
 		nResult = tas2557_dev_load_data(pTAS2557, p_tas2557_unmute_data);
 		if (nResult < 0)
 			goto end;
