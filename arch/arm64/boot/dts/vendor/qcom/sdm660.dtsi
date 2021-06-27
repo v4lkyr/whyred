@@ -1097,7 +1097,7 @@
 		operating-points-v2 = <&generic_bw_opp_table>;
 	};
 
-       cpu0_memlat_cpugrp: qcom,cpu0-cpugrp {
+	cpu0_memlat_cpugrp: qcom,cpu0-cpugrp {
 		compatible = "qcom,arm-memlat-cpugrp";
 		qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3>;
 
@@ -1105,6 +1105,7 @@
 			compatible = "qcom,arm-memlat-mon";
 			qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3>;
 			qcom,target-dev = <&cpu0_cpu_ddr_lat>;
+			qcom,cachemiss-ev = <0x17>;
 			qcom,core-dev-table =
 				< 902400 MHZ_TO_MBPS(200, 4) >,
 				< 1401600 MHZ_TO_MBPS(547, 4) >,
@@ -1122,7 +1123,7 @@
 		};
 	};
 
-       cpu4_memlat_cpugrp: qcom,cpu4-cpugrp {
+	cpu4_memlat_cpugrp: qcom,cpu4-cpugrp {
 		compatible = "qcom,arm-memlat-cpugrp";
 		qcom,cpulist = <&CPU4 &CPU5 &CPU6 &CPU7>;
 
@@ -1130,6 +1131,7 @@
 			compatible = "qcom,arm-memlat-mon";
 			qcom,cpulist = <&CPU4 &CPU5 &CPU6 &CPU7>;
 			qcom,target-dev = <&cpu4_cpu_ddr_lat>;
+			qcom,cachemiss-ev = <0x17>;
 			qcom,core-dev-table =
 				< 1113600 MHZ_TO_MBPS(200, 4) >,
 				< 1401600 MHZ_TO_MBPS(1017, 4) >,
@@ -1465,20 +1467,23 @@
 
 		ipa_smmu_ap: ipa_smmu_ap {
 			compatible = "qcom,ipa-smmu-ap-cb";
-			iommus = <&anoc2_smmu 0x19C0>;
-			qcom,iova-mapping = <0x10000000 0x40000000>;
+			iommus = <&anoc2_smmu 0x19C0 0x0>;
+			qcom,iommu-dma-addr-pool = <0x10000000 0x40000000>;
+			qcom,iommu-dma = "bypass";
 		};
 
 		ipa_smmu_wlan: ipa_smmu_wlan {
 			status = "disabled";
 			compatible = "qcom,ipa-smmu-wlan-cb";
-			iommus = <&anoc2_smmu 0x19C1>;
+			iommus = <&anoc2_smmu 0x19C1 0x0>;
+			qcom,iommu-dma = "bypass";
 		};
 
 		ipa_smmu_uc: ipa_smmu_uc {
 			compatible = "qcom,ipa-smmu-uc-cb";
-			iommus = <&anoc2_smmu 0x19C2>;
-			qcom,iova-mapping = <0x40000000 0x20000000>;
+			iommus = <&anoc2_smmu 0x19C2 0x0>;
+			qcom,iommu-dma-addr-pool = <0x40000000 0x20000000>;
+			qcom,iommu-dma = "bypass";
 		};
 	};
 
@@ -2464,11 +2469,11 @@
 
 	ufs1: ufshc@1da4000 {
 		compatible = "qcom,ufshc";
-		reg = <0x1da4000 0x3000>;
+		reg = <0x1da4000 0x3000>, <0x1db0000 0x8000>;
+		reg-names = "ufs_mem", "ufs_ice";
 		interrupts = <0 265 IRQ_TYPE_LEVEL_HIGH>;
 		phys = <&ufsphy1>;
 		phy-names = "ufsphy";
-		ufs-qcom-crypto = <&ufs_ice>;
 
 		clock-names =
 			"core_clk",
