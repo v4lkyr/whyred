@@ -401,7 +401,7 @@ static int validate_parallel_icl(struct pl_data *chip, bool *disable)
 }
 
 #if defined(CONFIG_XIAOMI_WHYRED)
-#define ONLY_PM660_CURRENT_UA 2000000
+#define ONLY_PM660_CURRENT_UA 2900000
 #endif
 
 static void split_settled(struct pl_data *chip)
