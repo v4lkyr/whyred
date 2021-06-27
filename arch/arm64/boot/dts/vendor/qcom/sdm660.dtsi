@@ -1191,7 +1191,7 @@
 		operating-points-v2 = <&generic_bw_opp_table>;
 	};
 
-       cpu0_memlat_cpugrp: qcom,cpu0-cpugrp {
+	cpu0_memlat_cpugrp: qcom,cpu0-cpugrp {
 		compatible = "qcom,arm-memlat-cpugrp";
 		qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3>;
 
@@ -1217,7 +1217,7 @@
 		};
 	};
 
-       cpu4_memlat_cpugrp: qcom,cpu4-cpugrp {
+	cpu4_memlat_cpugrp: qcom,cpu4-cpugrp {
 		compatible = "qcom,arm-memlat-cpugrp";
 		qcom,cpulist = <&CPU4 &CPU5 &CPU6 &CPU7>;
 
