@@ -894,7 +894,7 @@ static int fg_get_batt_profile(struct fg_dev *fg)
 	}
 
 	if (hwc_check_global){
-		fg->bp.fastchg_curr_ma = 2300;
+		fg->bp.fastchg_curr_ma = 2900;
 	}else{
 	rc = of_property_read_u32(profile_node, "qcom,fastchg-current-ma",
 			&fg->bp.fastchg_curr_ma);
