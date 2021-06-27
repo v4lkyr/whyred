@@ -312,7 +312,7 @@ static int smb2_parse_dt(struct smb2 *chip)
 						"qcom,pd-not-supported");
 
 	if (hwc_check_global){
-		chg->batt_profile_fcc_ua = 2300000;
+		chg->batt_profile_fcc_ua = 2900000;
 	}else{
 	rc = of_property_read_u32(node,
 				"qcom,fcc-max-ua", &chg->batt_profile_fcc_ua);
