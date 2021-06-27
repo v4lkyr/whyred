@@ -2982,9 +2982,9 @@ int smblib_get_prop_die_health(struct smb_charger *chg,
 #define SDP_CURRENT_UA			500000
 #define CDP_CURRENT_UA			1500000
 #define DCP_CURRENT_UA			2000000
-#define HVDCP2_CURRENT_UA		1500000
+#define HVDCP2_CURRENT_UA		3000000
 #if defined(CONFIG_XIAOMI_WHYRED)
-#define HVDCP_CURRENT_UA		2000000
+#define HVDCP_CURRENT_UA		3000000
 #else
 #define HVDCP_CURRENT_UA		3000000
 #endif
@@ -4255,17 +4255,17 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		 * if this is a SDP and appropriately set the current
 		 */
 		#if defined (CONFIG_XIAOMI_WHYRED)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 100000);
 		#endif
 		break;
 	case POWER_SUPPLY_TYPE_USB_HVDCP:
 		#if defined(CONFIG_XIAOMI_WHYRED)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1500000);
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 3000000);
 		#endif
 		break;
 	case POWER_SUPPLY_TYPE_USB_HVDCP_3:
 		#if defined (CONFIG_XIAOMI_WHYRED)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 2000000);
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 3000000);
 		#endif
 		break;
 	default:
