@@ -275,6 +275,10 @@ config PROCESS_RECLAIM
 	 (echo all > /proc/PID/reclaim) reclaims all pages.
 
 	 Any other value is ignored.
+
+config KGSL_RECLAIM
+	bool "Enable KGSL reclaim"
+
 #
 # support for page migration
 #
