@@ -225,7 +225,7 @@ int iio_read_channel_average_raw(struct iio_channel *chan, int *val);
  * do the appropriate transformation.
  */
 int iio_read_channel_processed(struct iio_channel *chan, int *val);
-
+int iio_write_channel_processed(struct iio_channel *chan, int val);
 /**
  * iio_write_channel_attribute() - Write values to the device attribute.
  * @chan:	The channel being queried.
@@ -289,6 +289,15 @@ int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
  */
 int iio_read_avail_channel_raw(struct iio_channel *chan,
 			       const int **vals, int *length);
+/**
+ * iio_write_channel_processed() - write to a given channel
+ * @chan:		The channel being queried.
+ * @val:		Value being written.
+ *
+ * Note processed writes to iio channels are converted to raw
+ * values before being written.
+ */
+int iio_write_channel_processed(struct iio_channel *chan, int val);
 
 /**
  * iio_get_channel_type() - get the type of a channel
