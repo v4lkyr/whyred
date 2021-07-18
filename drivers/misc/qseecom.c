@@ -888,7 +888,7 @@ static int qseecom_scm_call2(uint32_t svc_id, uint32_t tz_cmd_id,
 			if (!tzbuf)
 				return -ENOMEM;
 			memset(tzbuf, 0, tzbuflen);
-			memcpy_noio(tzbuf, req_buf + sizeof(uint32_t),
+			memcpy_toio((void __iomem *)tzbuf, req_buf + sizeof(uint32_t),
 				(sizeof(struct qseecom_key_generate_ireq) -
 				sizeof(uint32_t)));
 			dmac_flush_range(tzbuf, tzbuf + tzbuflen);
@@ -910,7 +910,7 @@ static int qseecom_scm_call2(uint32_t svc_id, uint32_t tz_cmd_id,
 			if (!tzbuf)
 				return -ENOMEM;
 			memset(tzbuf, 0, tzbuflen);
-			memcpy_noio(tzbuf, req_buf + sizeof(uint32_t),
+			memcpy_toio((void __iomem *)tzbuf, req_buf + sizeof(uint32_t),
 				(sizeof(struct qseecom_key_delete_ireq) -
 				sizeof(uint32_t)));
 			dmac_flush_range(tzbuf, tzbuf + tzbuflen);
@@ -932,7 +932,7 @@ static int qseecom_scm_call2(uint32_t svc_id, uint32_t tz_cmd_id,
 			if (!tzbuf)
 				return -ENOMEM;
 			memset(tzbuf, 0, tzbuflen);
-			memcpy_noio(tzbuf, req_buf + sizeof(uint32_t),
+			memcpy_toio((void __iomem *)tzbuf, req_buf + sizeof(uint32_t),
 				(sizeof(struct qseecom_key_select_ireq) -
 				sizeof(uint32_t)));
 			dmac_flush_range(tzbuf, tzbuf + tzbuflen);
@@ -954,7 +954,7 @@ static int qseecom_scm_call2(uint32_t svc_id, uint32_t tz_cmd_id,
 			if (!tzbuf)
 				return -ENOMEM;
 			memset(tzbuf, 0, tzbuflen);
-			memcpy_noio(tzbuf, req_buf + sizeof(uint32_t), (sizeof
+			memcpy_toio((void __iomem *)tzbuf, req_buf + sizeof(uint32_t), (sizeof
 				(struct qseecom_key_userinfo_update_ireq) -
 				sizeof(uint32_t)));
 			dmac_flush_range(tzbuf, tzbuf + tzbuflen);
