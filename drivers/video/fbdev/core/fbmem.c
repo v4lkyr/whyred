@@ -1060,22 +1060,18 @@ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
 }
 EXPORT_SYMBOL(fb_set_var);
 
-int
-fb_blank(struct fb_info *info, int blank)
-{	
+int fb_blank(struct fb_info *info, int blank)
+{
 	struct fb_event event;
 	int ret = -EINVAL, early_ret;
 
- 	if (blank > FB_BLANK_POWERDOWN)
- 		blank = FB_BLANK_POWERDOWN;
+	if (blank > FB_BLANK_POWERDOWN)
+		blank = FB_BLANK_POWERDOWN;
 
-	if(info->blank==blank){
-	  if(info->fbops->fb_blank){
-		printk("fb_mem 01\n");
-		ret=info->fbops->fb_blank(blank,info);
-	   }
-		printk("fb_mem 02 ret\n");
-	   return ret;	
+	if (info->blank == blank) {
+		if (info->fbops->fb_blank)
+			ret = info->fbops->fb_blank(blank, info);
+		return ret;
 	}
 
 	event.info = info;
@@ -1084,7 +1080,7 @@ fb_blank(struct fb_info *info, int blank)
 	early_ret = fb_notifier_call_chain(FB_EARLY_EVENT_BLANK, &event);
 
 	if (info->fbops->fb_blank)
- 		ret = info->fbops->fb_blank(blank, info);
+		ret = info->fbops->fb_blank(blank, info);
 
 	if (!ret)
 		fb_notifier_call_chain(FB_EVENT_BLANK, &event);
@@ -1097,11 +1093,10 @@ fb_blank(struct fb_info *info, int blank)
 			fb_notifier_call_chain(FB_R_EARLY_EVENT_BLANK, &event);
 	}
 
-	if(!ret){
-	info->blank=blank;
-	}
+	if (!ret)
+		info->blank = blank;
 
- 	return ret;
+	return ret;
 }
 EXPORT_SYMBOL(fb_blank);
 
