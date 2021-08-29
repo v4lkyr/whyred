@@ -1,0 +1,256 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/ {
+	cpus {
+		CPU0: cpu@0 {
+			clock-frequency = <1843200000>;
+			efficiency = <1024>;
+			capacity-dmips-mhz = <1024>;
+			sched-energy-costs = <&CPU_COST_0>;
+		};
+
+		CPU1: cpu@1 {
+			clock-frequency = <1843200000>;
+			efficiency = <1024>;
+			capacity-dmips-mhz = <1024>;
+			sched-energy-costs = <&CPU_COST_0>;
+		};
+
+		CPU2: cpu@2 {
+			clock-frequency = <1843200000>;
+			efficiency = <1024>;
+			capacity-dmips-mhz = <1024>;
+			sched-energy-costs = <&CPU_COST_0>;
+		};
+
+		CPU3: cpu@3 {
+			clock-frequency = <1843200000>;
+			efficiency = <1024>;
+			capacity-dmips-mhz = <1024>;
+			sched-energy-costs = <&CPU_COST_0>;
+		};
+
+		CPU4: cpu@100 {
+			clock-frequency = <2208000000>;
+			efficiency = <1638>;
+			capacity-dmips-mhz = <1638>;
+			sched-energy-costs = <&CPU_COST_1>;
+		};
+
+		CPU5: cpu@101 {
+			clock-frequency = <2208000000>;
+			efficiency = <1638>;
+			capacity-dmips-mhz = <1638>;
+			sched-energy-costs = <&CPU_COST_1>;
+		};
+
+		CPU6: cpu@102 {
+			clock-frequency = <2208000000>;
+			efficiency = <1638>;
+			capacity-dmips-mhz = <1638>;
+			sched-energy-costs = <&CPU_COST_1>;
+		};
+
+		CPU7: cpu@103 {
+			clock-frequency = <2208000000>;
+			efficiency = <1638>;
+			capacity-dmips-mhz = <1638>;
+			sched-energy-costs = <&CPU_COST_1>;
+		};
+	};
+
+	energy_costs: energy-costs {
+		compatible = "sched-energy";
+
+		CPU_COST_0: core-cost0 {
+			busy-cost-data = <
+				633600	41
+				902400	70
+				1113600	83
+				1401600	146
+				1536000	158
+				1612800 183
+				1747200	228
+				1843200	285
+			>;
+		};
+
+		CPU_COST_1: core-cost1 {
+			busy-cost-data = <
+				1113600	307
+				1401600	485
+				1747200	857
+				1804800	883
+				1958400	1222
+				2150400	1592
+				2208000	1632
+				2457600	2080
+			>;
+		};
+	};
+};
+
+&soc {
+	clock_cpu: qcom,clk-cpu-660@179c0000 {
+		compatible = "qcom,clk-cpu-osm";
+		reg = <0x179c0000 0x4000>, <0x17916000 0x1000>,
+		      <0x17816000 0x1000>, <0x179d1000 0x1000>,
+		      <0x00784130 0x8>, <0x00784130 0x8>;
+		reg-names = "osm", "pwrcl_pll", "perfcl_pll",
+			    "apcs_common", "pwrcl_efuse",
+			    "perfcl_efuse";
+
+		vdd-pwrcl-supply = <&apc0_pwrcl_vreg>;
+		vdd-perfcl-supply = <&apc1_perfcl_vreg>;
+
+		interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>,
+			     <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
+		interrupt-names = "pwrcl-irq", "perfcl-irq";
+
+		qcom,pwrcl-speedbin0-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<   633600000 0x05040021 0x03200020 0x1 2 >,
+			<   902400000 0x0404002f 0x04260026 0x1 3 >,
+			<  1113600000 0x0404003a 0x052e002e 0x2 4 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 5 >,
+			<  1536000000 0x04040050 0x08400040 0x2 6 >,
+			<  1747200000 0x0404005b 0x09480048 0x2 7 >,
+			<  1843200000 0x04040060 0x094c004c 0x3 8 >;
+
+		qcom,pwrcl-speedbin1-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<   633600000 0x05040021 0x03200020 0x1 2 >,
+			<   902400000 0x0404002f 0x04260026 0x1 3 >,
+			<  1113600000 0x0404003a 0x052e002e 0x2 4 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 5 >,
+			<  1536000000 0x04040050 0x08400040 0x2 6 >,
+			<  1747200000 0x0404005b 0x09480048 0x2 7 >,
+			<  1843200000 0x04040060 0x094c004c 0x3 8 >;
+
+		qcom,pwrcl-speedbin3-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<   633600000 0x05040021 0x03200020 0x1 2 >,
+			<   902400000 0x0404002f 0x04260026 0x1 3 >,
+			<  1113600000 0x0404003a 0x052e002e 0x2 4 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 5 >,
+			<  1536000000 0x04040050 0x08400040 0x2 6 >,
+			<  1612800000 0x04040054 0x09430043 0x2 7 >;
+
+		qcom,pwrcl-speedbin4-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<   633600000 0x05040021 0x03200020 0x1 2 >,
+			<   902400000 0x0404002f 0x04260026 0x1 3 >,
+			<  1113600000 0x0404003a 0x052e002e 0x2 4 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 5 >,
+			<  1536000000 0x04040050 0x08400040 0x2 6 >,
+			<  1747200000 0x0404005b 0x09480048 0x2 7 >,
+			<  1843200000 0x04040060 0x094c004c 0x3 8 >;
+
+		qcom,perfcl-speedbin0-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<  1113600000 0x0404003a 0x052e002e 0x1 2 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 3 >,
+			<  1747200000 0x0404005b 0x09480048 0x2 4 >,
+			<  1958400000 0x04040066 0x0a510051 0x2 5 >,
+			<  2150400000 0x04040070 0x0b590059 0x2 6 >,
+			<  2457600000 0x04040080 0x0c660066 0x3 7 >;
+
+		qcom,perfcl-speedbin1-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<  1113600000 0x0404003a 0x052e002e 0x1 2 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 3 >,
+			<  1747200000 0x0404005b 0x09480048 0x2 4 >,
+			<  1958400000 0x04040066 0x0a510051 0x2 5 >,
+			<  2150400000 0x04040070 0x0b590059 0x2 6 >,
+			<  2208000000 0x04040073 0x0b5c005c 0x3 7 >;
+
+		qcom,perfcl-speedbin3-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<  1113600000 0x0404003a 0x052e002e 0x1 2 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 3 >,
+			<  1747200000 0x0404005b 0x09480048 0x2 4 >,
+			<  1804800000 0x0404005e 0x094b004b 0x2 5 >;
+
+		qcom,perfcl-speedbin4-v0 =
+			<   300000000 0x0004000f 0x01200020 0x1 1 >,
+			<  1113600000 0x0404003a 0x052e002e 0x1 2 >,
+			<  1401600000 0x04040049 0x073a003a 0x2 3 >,
+			<  1747200000 0x0404005b 0x09480048 0x2 4 >,
+			<  1958400000 0x04040066 0x0a510051 0x2 5 >;
+
+		qcom,up-timer = <1000 1000>;
+		qcom,down-timer = <1000 1000>;
+		qcom,set-ret-inactive;
+		qcom,enable-llm-freq-vote;
+		qcom,llm-freq-up-timer = <327675 327675>;
+		qcom,llm-freq-down-timer = <327675 327675>;
+		qcom,enable-llm-volt-vote;
+		qcom,llm-volt-up-timer = <327675 327675>;
+		qcom,llm-volt-down-timer = <327675 327675>;
+		qcom,cc-reads = <10>;
+		qcom,cc-delay = <5>;
+		qcom,cc-factor = <100>;
+		qcom,osm-clk-rate = <200000000>;
+		qcom,xo-clk-rate = <19200000>;
+
+		qcom,l-val-base = <0x17916004 0x17816004>;
+		qcom,apcs-itm-present = <0x179d143c 0x179d143c>;
+		qcom,apcs-pll-user-ctl = <0x1791600c 0x1781600c>;
+		qcom,apcs-cfg-rcgr = <0x17911054 0x17811054>;
+		qcom,apcs-cmd-rcgr = <0x17911050 0x17811050>;
+		qcom,apm-mode-ctl = <0x179d0004 0x179d0010>;
+		qcom,apm-ctrl-status = <0x179d000c 0x179d0018>;
+
+		qcom,apm-threshold-voltage = <872000>;
+		qcom,boost-fsm-en;
+		qcom,safe-fsm-en;
+		qcom,ps-fsm-en;
+		qcom,droop-fsm-en;
+		qcom,wfx-fsm-en;
+		qcom,pc-fsm-en;
+
+		clock-names = "aux_clk", "xo_a";
+		clocks = <&clock_gcc HMSS_GPLL0_CLK_SRC>,
+			 <&clock_rpmcc RPM_SMD_XO_A_CLK_SRC>;
+
+		#clock-cells = <1>;
+	};
+
+	msm_cpufreq: qcom,msm-cpufreq {
+		compatible = "qcom,msm-cpufreq";
+		clock-names = "cpu0_clk", "cpu4_clk";
+		clocks = <&clock_cpu PWRCL_CLK>,
+			 <&clock_cpu PERFCL_CLK>;
+
+		qcom,governor-per-policy;
+
+		qcom,cpufreq-table-0 =
+			<  633600 >,
+			<  902400 >,
+			< 1113600 >,
+			< 1401600 >,
+			< 1536000 >,
+			< 1612800 >,
+			< 1747200 >,
+			< 1843200 >;
+
+		qcom,cpufreq-table-4 =
+			< 1113600 >,
+			< 1401600 >,
+			< 1747200 >,
+			< 1804800 >,
+			< 1958400 >,
+			< 2150400 >,
+			< 2208000 >,
+			< 2457600 >;
+	};
+};
