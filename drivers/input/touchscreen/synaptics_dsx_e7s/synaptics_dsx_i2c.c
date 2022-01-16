@@ -299,7 +299,7 @@ static int synaptics_rmi4_i2c_set_page(struct synaptics_rmi4_data *rmi4_data,
 				retval = PAGE_SELECT_LEN;
 				break;
 			}
-			dev_err(rmi4_data->pdev->dev.parent,
+			dev_dbg(rmi4_data->pdev->dev.parent,
 					"%s: I2C retry %d\n",
 					__func__, retry + 1);
 			msleep(20);
@@ -368,7 +368,7 @@ static int synaptics_rmi4_i2c_read(struct synaptics_rmi4_data *rmi4_data,
 			if (retval == xfer_msgs)
 				break;
 
-			dev_err(rmi4_data->pdev->dev.parent,
+			dev_dbg(rmi4_data->pdev->dev.parent,
 					"%s: I2C retry %d\n",
 					__func__, retry + 1);
 			msleep(20);
@@ -440,7 +440,7 @@ static int synaptics_rmi4_i2c_write(struct synaptics_rmi4_data *rmi4_data,
 			retval = length;
 			break;
 		}
-		dev_err(rmi4_data->pdev->dev.parent,
+		dev_dbg(rmi4_data->pdev->dev.parent,
 				"%s: I2C retry %d\n",
 				__func__, retry + 1);
 		msleep(20);
