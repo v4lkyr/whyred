@@ -471,6 +471,9 @@ struct tas2557_priv {
 	*/
 	bool mbBypassTMax;
 
+	unsigned int bob_fast_profile;
+	struct regulator *vbob_regulator;
+
 #ifdef CONFIG_TAS2557_CODEC
 	struct mutex codec_lock;
 #endif
