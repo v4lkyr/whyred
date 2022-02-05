@@ -22,7 +22,6 @@
 
 #ifdef CONFIG_TAS2557_CODEC
 
-
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/init.h>
@@ -320,7 +319,7 @@ static int tas2557_fs_put(struct snd_kcontrol *pKcontrol,
 
 	mutex_lock(&pTAS2557->codec_lock);
 
-	dev_info(pTAS2557->dev, "tas2557_fs_put = %d\n", nFS);
+	dev_vdbg(pTAS2557->dev, "tas2557_fs_put = %d\n", nFS);
 	ret = tas2557_set_sampling_rate(pTAS2557, nFS);
 
 	mutex_unlock(&pTAS2557->codec_lock);
@@ -426,7 +425,7 @@ static int tas2557_configuration_put(struct snd_kcontrol *pKcontrol,
 
 	mutex_lock(&pTAS2557->codec_lock);
 
-	dev_info(pTAS2557->dev, "%s = %d\n", __func__, nConfiguration);
+	dev_vdbg(pTAS2557->dev, "%s = %d\n", __func__, nConfiguration);
 	ret = tas2557_set_config(pTAS2557, nConfiguration);
 
 	mutex_unlock(&pTAS2557->codec_lock);
@@ -446,7 +445,7 @@ static int tas2557_calibration_get(struct snd_kcontrol *pKcontrol,
 	mutex_lock(&pTAS2557->codec_lock);
 
 	pValue->value.integer.value[0] = pTAS2557->mnCurrentCalibration;
-	dev_info(pTAS2557->dev,
+	dev_vdbg(pTAS2557->dev,
 		"tas2557_calibration_get = %d\n",
 		pTAS2557->mnCurrentCalibration);
 
@@ -570,7 +569,7 @@ int tas2557_register_codec(struct tas2557_priv *pTAS2557)
 {
 	int nResult = 0;
 
-	dev_info(pTAS2557->dev, "%s, enter\n", __func__);
+	dev_vdbg(pTAS2557->dev, "%s, enter\n", __func__);
 	nResult = snd_soc_register_component(pTAS2557->dev,
 		&soc_component_driver_tas2557,
 		tas2557_dai_driver, ARRAY_SIZE(tas2557_dai_driver));
