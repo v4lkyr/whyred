@@ -22,7 +22,6 @@
 
 #ifdef CONFIG_TAS2557_REGMAP
 
-#define DEBUG
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/init.h>
@@ -398,7 +397,7 @@ static void tas2557_hw_reset(struct tas2557_priv *pTAS2557)
 	pTAS2557->mnCurrentBook = -1;
 	pTAS2557->mnCurrentPage = -1;
 	if (pTAS2557->mnErrCode)
-		dev_info(pTAS2557->dev, "before reset, ErrCode=0x%x\n", pTAS2557->mnErrCode);
+		dev_vdbg(pTAS2557->dev, "before reset, ErrCode=0x%x\n", pTAS2557->mnErrCode);
 	pTAS2557->mnErrCode = 0;
 }
 
@@ -588,19 +587,19 @@ static void timer_work_routine(struct work_struct *work)
 #endif
 
 	if (pTAS2557->mbRuntimeSuspend) {
-		dev_info(pTAS2557->dev, "%s, Runtime Suspended\n", __func__);
+		dev_vdbg(pTAS2557->dev, "%s, Runtime Suspended\n", __func__);
 		goto end;
 	}
 
 	if (!pTAS2557->mpFirmware->mnConfigurations) {
-		dev_info(pTAS2557->dev, "%s, firmware not loaded\n", __func__);
+		dev_vdbg(pTAS2557->dev, "%s, firmware not loaded\n", __func__);
 		goto end;
 	}
 
 	pProgram = &(pTAS2557->mpFirmware->mpPrograms[pTAS2557->mnCurrentProgram]);
 	if (!pTAS2557->mbPowerUp
 		|| (pProgram->mnAppMode != TAS2557_APP_TUNINGMODE)) {
-		dev_info(pTAS2557->dev, "%s, pass, Pow=%d, program=%s\n",
+		dev_vdbg(pTAS2557->dev, "%s, pass, Pow=%d, program=%s\n",
 			__func__, pTAS2557->mbPowerUp, pProgram->mpName);
 		goto end;
 	}
@@ -740,7 +739,7 @@ static int tas2557_i2c_probe(struct i2c_client *pClient,
 	unsigned int nValue = 0;
 	const char *pFWName;
 
-	dev_info(&pClient->dev, "%s enter\n", __func__);
+	dev_vdbg(&pClient->dev, "%s enter\n", __func__);
 
 	pTAS2557 = devm_kzalloc(&pClient->dev, sizeof(struct tas2557_priv), GFP_KERNEL);
 	if (!pTAS2557) {
@@ -799,14 +798,14 @@ static int tas2557_i2c_probe(struct i2c_client *pClient,
 	tas2557_dev_read(pTAS2557, TAS2557_REV_PGID_REG, &nValue);
 	pTAS2557->mnPGID = nValue;
 	if (pTAS2557->mnPGID == TAS2557_PG_VERSION_2P1) {
-		dev_info(pTAS2557->dev, "PG2.1 Silicon found\n");
+		dev_vdbg(pTAS2557->dev, "PG2.1 Silicon found\n");
 		pFWName = TAS2557_FW_NAME;
 	} else if (pTAS2557->mnPGID == TAS2557_PG_VERSION_1P0) {
-		dev_info(pTAS2557->dev, "PG1.0 Silicon found\n");
+		dev_vdbg(pTAS2557->dev, "PG1.0 Silicon found\n");
 		pFWName = TAS2557_PG1P0_FW_NAME;
 	} else {
 		nResult = -ENOTSUPP;
-		dev_info(pTAS2557->dev, "unsupport Silicon 0x%x\n", pTAS2557->mnPGID);
+		dev_vdbg(pTAS2557->dev, "unsupport Silicon 0x%x\n", pTAS2557->mnPGID);
 		goto err;
 	}
 
@@ -880,7 +879,7 @@ static int tas2557_i2c_remove(struct i2c_client *pClient)
 {
 	struct tas2557_priv *pTAS2557 = i2c_get_clientdata(pClient);
 
-	dev_info(pTAS2557->dev, "%s\n", __func__);
+	dev_vdbg(pTAS2557->dev, "%s\n", __func__);
 
 #ifdef CONFIG_TAS2557_CODEC
 	tas2557_deregister_codec(pTAS2557);
