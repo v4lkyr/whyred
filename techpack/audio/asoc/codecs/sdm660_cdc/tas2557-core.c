@@ -293,17 +293,33 @@ end:
 
 static void failsafe(struct tas2557_priv *pTAS2557)
 {
+	int ret;
+
 	dev_err(pTAS2557->dev, "%s\n", __func__);
 	pTAS2557->mnErrCode |= ERROR_FAILSAFE;
+
 	if (hrtimer_active(&pTAS2557->mtimer))
 		hrtimer_cancel(&pTAS2557->mtimer);
+
 	pTAS2557->enableIRQ(pTAS2557, false, false);
-	tas2557_dev_load_data(pTAS2557, p_tas2557_shutdown_data);
+
+	ret = tas2557_dev_load_data(pTAS2557, p_tas2557_shutdown_data);
+	if (ret < 0)
+		dev_dbg(pTAS2557->dev, "failed load shutdown\n");
+
 	pTAS2557->mbPowerUp = false;
 	pTAS2557->hw_reset(pTAS2557);
-	pTAS2557->write(pTAS2557, TAS2557_SW_RESET_REG, 0x01);
+
+	ret = pTAS2557->write(pTAS2557, TAS2557_SW_RESET_REG, 0x01);
+	if (ret < 0)
+		dev_dbg(pTAS2557->dev, "failed sw reset\n");
+
 	udelay(1000);
-	pTAS2557->write(pTAS2557, TAS2557_SPK_CTRL_REG, 0x04);
+
+	ret = pTAS2557->write(pTAS2557, TAS2557_SPK_CTRL_REG, 0x04);
+	if (ret < 0)
+		dev_dbg(pTAS2557->dev, "failed in spk ctrl\n");
+
 	if (pTAS2557->mpFirmware != NULL)
 		tas2557_clear_firmware(pTAS2557->mpFirmware);
 }
@@ -735,11 +751,17 @@ static int fw_parse_data(struct tas2557_priv *pTAS2557, struct TFirmware *pFirmw
 	pImageData->mpBlocks =
 		kmalloc(sizeof(struct TBlock) * pImageData->mnBlocks, GFP_KERNEL);
 
+	if (pImageData->mpBlocks == NULL) {
+		dev_dbg(pTAS2557->dev, "failed malloc blocks mem\n");
+		return pData - pDataStart;
+	}
+
 	for (nBlock = 0; nBlock < pImageData->mnBlocks; nBlock++) {
 		n = fw_parse_block_data(pTAS2557, pFirmware,
 			&(pImageData->mpBlocks[nBlock]), pData);
 		pData += n;
 	}
+
 	return pData - pDataStart;
 }
 
@@ -792,6 +814,11 @@ static int fw_parse_program_data(struct tas2557_priv *pTAS2557,
 
 	pFirmware->mpPrograms =
 		kmalloc(sizeof(struct TProgram) * pFirmware->mnPrograms, GFP_KERNEL);
+	if (pFirmware->mpPrograms == NULL) {
+		dev_dbg(pTAS2557->dev, "failed malloc program mem\n");
+		goto end;
+	}
+
 	for (nProgram = 0; nProgram < pFirmware->mnPrograms; nProgram++) {
 		pProgram = &(pFirmware->mpPrograms[nProgram]);
 		memcpy(pProgram->mpName, pData, 64);
@@ -812,7 +839,6 @@ static int fw_parse_program_data(struct tas2557_priv *pTAS2557,
 	}
 
 end:
-
 	return pData - pDataStart;
 }
 
@@ -833,6 +859,11 @@ static int fw_parse_configuration_data(struct tas2557_priv *pTAS2557,
 	pFirmware->mpConfigurations =
 		kmalloc(sizeof(struct TConfiguration) * pFirmware->mnConfigurations,
 		GFP_KERNEL);
+	if (pFirmware->mpConfigurations == NULL) {
+		dev_dbg(pTAS2557->dev, "failed malloc configuration mem\n");
+		goto end;
+	}
+
 	for (nConfiguration = 0; nConfiguration < pFirmware->mnConfigurations;
 		nConfiguration++) {
 		pConfiguration = &(pFirmware->mpConfigurations[nConfiguration]);
@@ -873,7 +904,6 @@ static int fw_parse_configuration_data(struct tas2557_priv *pTAS2557,
 	}
 
 end:
-
 	return pData - pDataStart;
 }
 
@@ -893,6 +923,11 @@ int fw_parse_calibration_data(struct tas2557_priv *pTAS2557,
 
 	pFirmware->mpCalibrations =
 		kmalloc(sizeof(struct TCalibration) * pFirmware->mnCalibrations, GFP_KERNEL);
+	if (pFirmware->mpCalibrations == NULL) {
+		dev_err(pTAS2557->dev, "failed to malloc calibration mem\n");
+		goto end;
+	}
+
 	for (nCalibration = 0;
 		nCalibration < pFirmware->mnCalibrations;
 		nCalibration++) {
@@ -915,7 +950,6 @@ int fw_parse_calibration_data(struct tas2557_priv *pTAS2557,
 	}
 
 end:
-
 	return pData - pDataStart;
 }
 
