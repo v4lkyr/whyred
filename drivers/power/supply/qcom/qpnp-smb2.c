@@ -2596,15 +2596,8 @@ static int thermal_notifier_callback(struct notifier_block *noti, unsigned long 
 	int *blank;
 	if (ev_data && ev_data->data && chg) {
 		blank = ev_data->data;
-		if (event == FB_EARLY_EVENT_BLANK && *blank == FB_BLANK_UNBLANK) {
-
-			lct_backlight_off = false;
-			schedule_work(&chg->fb_notify_work);
-		}
-		else if (event == FB_EVENT_BLANK && *blank == FB_BLANK_POWERDOWN) {
-			lct_backlight_off = true;
-			schedule_work(&chg->fb_notify_work);
-		}
+		lct_backlight_off = true;
+		schedule_work(&chg->fb_notify_work);
 	}
 
 	return 0;
