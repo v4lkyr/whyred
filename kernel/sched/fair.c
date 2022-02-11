@@ -105,10 +105,16 @@ int __weak arch_asym_cpu_priority(int cpu)
 	return -cpu;
 }
 
-static unsigned int sched_capacity_margin_up[NR_CPUS] = {
-			[0 ... NR_CPUS-1] = 1078}; /* ~5% margin */
-static unsigned int sched_capacity_margin_down[NR_CPUS] = {
-			[0 ... NR_CPUS-1] = 1205}; /* ~15% margin */
+static unsigned int sched_capacity_margin_up[CPU_NR] = {
+			[0 ... CPU_NR-1] = 1078}; /* ~5% margin */
+static unsigned int sched_capacity_margin_down[CPU_NR] = {
+			[0 ... CPU_NR-1] = 1205}; /* ~15% margin */
+static unsigned int sched_capacity_margin_up_boosted[CPU_NR] = {
+	3658, 3658, 3658, 3658, 3658, 3658, 1078, 1024
+}; /* 72% margin for small, 5% for big, 0% for big+ */
+static unsigned int sched_capacity_margin_down_boosted[CPU_NR] = {
+	3658, 3658, 3658, 3658, 3658, 3658, 3658, 3658
+}; /* not used for small cores, 72% margin for big, 72% margin for big+ */
 
 static unsigned int sched_small_task_threshold = 102;
 
@@ -3912,11 +3918,15 @@ static inline bool task_fits_capacity(struct task_struct *p,
 	 * CPU.
 	 */
 	if (capacity_orig_of(task_cpu(p)) > capacity_orig_of(cpu))
-		margin = sched_capacity_margin_down[cpu];
+		margin = schedtune_task_boost(p) > 0 ?
+			sched_capacity_margin_down_boosted[task_cpu(p)] :
+			sched_capacity_margin_down[task_cpu(p)];
 	else
-		margin = sched_capacity_margin_up[task_cpu(p)];
+		margin = schedtune_task_boost(p) > 0 ?
+			sched_capacity_margin_up_boosted[task_cpu(p)] :
+			sched_capacity_margin_up[task_cpu(p)];
 
-	return fits_capacity(uclamp_task_util(p), margin, capacity);
+	return fits_capacity(uclamp_task(p), margin, capacity);
 }
 
 static inline bool task_demand_fits(struct task_struct *p, int cpu)
