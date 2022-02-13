@@ -91,9 +91,6 @@ struct cpuidle_state;
 
 #define TASK_BITS (PID_MAX_DEFAULT + BITS_PER_LONG)
 
-extern unsigned int sched_capacity_margin_up[CPU_NR];
-extern unsigned int sched_capacity_margin_down[CPU_NR];
-
 /* task_struct::on_rq states: */
 #define TASK_ON_RQ_QUEUED	1
 #define TASK_ON_RQ_MIGRATING	2
