@@ -106,15 +106,17 @@ int __weak arch_asym_cpu_priority(int cpu)
 }
 
 static unsigned int sched_capacity_margin_up[CPU_NR] = {
-			[0 ... CPU_NR-1] = 1078}; /* ~5% margin */
+			1365, 1365, 1365, 1365, 1024, 1024, 1024, 1024
+}; /* ~25% margin for small, not used for big */
 static unsigned int sched_capacity_margin_down[CPU_NR] = {
-			[0 ... CPU_NR-1] = 1205}; /* ~15% margin */
+			[0 ... CPU_NR-1] = 1652
+}; /* ~38% margin */
 static unsigned int sched_capacity_margin_up_boosted[CPU_NR] = {
-	3658, 3658, 3658, 3658, 3658, 3658, 1078, 1024
-}; /* 72% margin for small, 5% for big, 0% for big+ */
+	1365, 1365, 1365, 1365, 1024, 1024, 1024, 1024
+}; /* 25% margin for small, not used for big */
 static unsigned int sched_capacity_margin_down_boosted[CPU_NR] = {
-	3658, 3658, 3658, 3658, 3658, 3658, 3658, 3658
-}; /* not used for small cores, 72% margin for big, 72% margin for big+ */
+	1024, 1024, 1024, 1024, 2048, 2048, 2048, 2048
+}; /* not used for small cores, 50% margin for big */
 
 static unsigned int sched_small_task_threshold = 102;
 
