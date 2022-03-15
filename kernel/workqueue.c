@@ -4440,6 +4440,15 @@ unsigned int work_busy(struct work_struct *work)
 }
 EXPORT_SYMBOL_GPL(work_busy);
 
+/*
+ * See work_busy()
+ */
+unsigned int delayed_work_busy(struct delayed_work *dwork)
+{
+	return work_busy(&dwork->work);
+}
+EXPORT_SYMBOL_GPL(delayed_work_busy);
+
 /**
  * set_worker_desc - set description for the current work item
  * @fmt: printf-style format string
