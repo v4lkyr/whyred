@@ -1088,16 +1088,7 @@ static void add_timer_randomness(struct timer_rand_state *state, unsigned int nu
 void add_input_randomness(unsigned int type, unsigned int code,
 			  unsigned int value)
 {
-	static unsigned char last_value;
-	static struct timer_rand_state input_timer_state = { INITIAL_JIFFIES };
-
-	/* Ignore autorepeat and the like. */
-	if (value == last_value)
-		return;
-
-	last_value = value;
-	add_timer_randomness(&input_timer_state,
-			     (type << 4) ^ code ^ (code >> 4) ^ value);
+	return;
 }
 EXPORT_SYMBOL_GPL(add_input_randomness);
 
