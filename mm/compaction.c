@@ -2027,7 +2027,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
 	count_compact_event(KCOMPACTD_WAKE);
 
 	for (zoneid = 0; zoneid <= cc.classzone_idx; zoneid++) {
-		int status;
+		int status = 0;
 
 		zone = &pgdat->node_zones[zoneid];
 		if (!populated_zone(zone))
@@ -2044,7 +2044,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
 			return;
 
 		cc.zone = zone;
-		compact_zone(zone, &cc);
+		status = compact_zone(zone, &cc);
 
 		if (status == COMPACT_SUCCESS) {
 			compaction_defer_reset(zone, cc.order, false);
