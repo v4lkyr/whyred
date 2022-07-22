@@ -371,7 +371,7 @@ static int synaptics_rmi4_i2c_read(struct synaptics_rmi4_data *rmi4_data,
 			dev_dbg(rmi4_data->pdev->dev.parent,
 					"%s: I2C retry %d\n",
 					__func__, retry + 1);
-			msleep(20);
+			msleep(250);
 
 			if (retry == SYN_I2C_RETRY_TIMES / 2) {
 				synaptics_rmi4_i2c_check_addr(rmi4_data, i2c);
