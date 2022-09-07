@@ -962,6 +962,7 @@ out:
 	return prog;
 }
 
+#ifdef CONFIG_MODULES
 void *bpf_jit_alloc_exec(unsigned long size)
 {
 	return __vmalloc_node_range(size, PAGE_SIZE, BPF_JIT_REGION_START,
@@ -974,6 +975,7 @@ void bpf_jit_free_exec(void *addr)
 {
 	return vfree(addr);
 }
+#endif
 
 #ifdef CONFIG_CFI_CLANG
 bool arch_bpf_jit_check_func(const struct bpf_prog *prog)
